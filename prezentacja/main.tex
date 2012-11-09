@@ -6,7 +6,7 @@
 \usepackage{graphicx}
 
 \usetheme{Warsaw}
-\title[Sieci Bayesowskie]{Uczenie modeli kanonicznych w sieciach Bayesowsich - efektywne uczenie modelu Noisy OR/MAX z danych.}
+\title[Sieci Bayesowskie]{Uczenie modeli kanonicznych w sieciach Bayesowskich - efektywne uczenie modelu Noisy OR/MAX z danych}
 \author{Krzysztof Nowak}
 \institute{Politechnika Białostocka}
 \date{23.10.2012}
@@ -17,7 +17,7 @@
 \end{frame}
 
 \begin{frame}{Wprowadzenie}
-	Sieć Bayesowska - struktura służąca do przedstawiania zależności pomiędzy zdarzeniami bazując na rachunku prawdopodobieństwa.
+	Sieć Bayesowska - struktura służąca do przedstawiania zależności pomiędzy zdarzeniami, bazując na rachunku prawdopodobieństwa.
 
 
 	\pause W sieciach bayesowskich można wyróżnić:
@@ -45,6 +45,7 @@
 	\end{figure}
 	\begin{itemize}
 		\item Wykładniczy przyrost parametrów ze względu na ilość węzłów rodzicielskich.
+		\item Przydatny model przy uczeniu sieci z dużych zbiorów danych.
 	\end{itemize}
 \end{frame}
 
@@ -57,6 +58,7 @@
 
 	\begin{itemize}
 		\item Liniowy przyrost parametrów ze względu na ilość węzłów rodzicielskich.
+		\item Przydatny model przy uczeniu sieci z małych zbiorów danych, bądź wiedzy eskperta.
 		\item Bramka Noisy OR jest szczególnym przypadkiem bramki Noisy MAX.
 	\end{itemize}
 \end{frame}
@@ -83,7 +85,7 @@
 \end{frame}
 
 \begin{frame}{Wyliczanie parametrów z danych - CPT}
-	Standardowy węzeł w sieci bayesowskiej wymaga podania całej tabeli prawdopodobieńst warunkowych. 
+	Standardowy węzeł w sieci bayesowskiej wymaga podania całej tabeli prawdopodobieństw warunkowych. 
 	Zliczamy poszczególne wystąpienia danych kombinacji parametrów w pliku z danymi i na ich podstawie wyliczamy prawdopodobieństwo.
 
 	\begin{figure}[h!]
@@ -104,8 +106,8 @@
 
 \begin{frame}{Usprawnienie wyliczania parametrów z danych - Noisy-OR/MAX}
 	\begin{itemize}
-		\item W podanej wcześniej sieci, ilość rekordów składających się na wyliczenie wszystkich parametrów dla bramki Noisy-OR to około \textbf{47\%}.
-		\item Można to interpretować w taki sposób: Przy określaniu parametrów dla bramki Noisy-OR, pomijamy \textbf{53\%} informacji zawartych w pliku z danymi.
+		\item W podanym wcześniej pliku z danymi, ilość rekordów składających się na wyliczenie wszystkich parametrów dla bramki Noisy-OR to około \textbf{47\%} wszystkich rekordów.
+		\item Można to interpretować w taki sposób: Przy określaniu parametrów dla bramki Noisy-OR, pomijamy około \textbf{53\%} informacji zawartych w danych.
 		\item Dla porównania, określenie parametrów (CPT) dla bramki standardowej wykorzystuje cały plik z danymi.
 		\pause \item Czy da się lepiej uzyskać poszczególne parametry sieci Noisy-OR ?
 	\end{itemize}
@@ -114,8 +116,89 @@
 \begin{frame}{Usprawnienie wyliczania parametrów z danych.}
 	\begin{itemize}
 		\item Układy równań parametrów.
-		\pause \item Wybieramy układ $n$ niewiadomych TODO<-
+		\pause \item Zamiast zliczać rekordy w danych określające każdy z parametrów bezpośrednio (Noisy-OR), wybieramy $n$ kombinacji o największej liczbie ``reprezentantów'' w danych.
+		\pause \item Otrzymujemy w ten sposób pewien zbiór kombinacji parametrów, przykładowo:
+
+			$x_1, \bar{x_2}, x_3, \bar{x_4} = p_{1,3}$
+
+			$x_1, \bar{x_2}, \bar{x_3}, x_4 = p_{1,4}$
+
+			$\bar{x_1}, \bar{x_2}, x_3, x_4 = p_{3,4}$
+
+			$x_1, x_2, x_3, \bar{x_4} = p_{1,2,3}$
+		\pause \item Zależy nam na uzyskaniu parametrów $p_1, p_2, p_3, p_4$.
 	\end{itemize}
+\end{frame}
+
+\begin{frame}{Rozwiązywanie układu równań}
+	\begin{itemize}
+		\item Korzystając ze wzoru (2) mamy:
+
+		$1 - (1-p_1)\times(1-p_3) = p_{1,3}$
+
+		$1 - (1-p_1)\times(1-p_4) = p_{1,4}$
+
+		$1 - (1-p_3)\times(1-p_4) = p_{3,4}$
+
+		$1 - (1-p_1)\times(1-p_2)\times(1-p_3) = p_{1,2,3}$
+
+		\pause \item Aby uprościć obliczenia, rozwiązujemy układ dla $1-p_i$ zamiast $p_i$ (używamy podstawienia $p'_i = 1 - p_i$).
+		\pause
+		$1 - (p`_1)\times(p`_3) = p_{1,3}$
+
+		$1 - (p`_1)\times(p`_4) = p_{1,4}$
+
+		$1 - (p`_3)\times(p`_4) = p_{3,4}$
+
+		$1 - (p`_1)\times(p`_2)\times(p`_3) = p_{1,2,3}$
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Rozwiązywanie układu równań}
+	\begin{itemize}
+	\item
+		Ostatecznie otrzymujemy:
+
+		$(p`_1)\times(p`_3) = 1 - p_{1,3}$
+
+		$(p`_1)\times(p`_4) = 1 - p_{1,4}$
+
+		$(p`_3)\times(p`_4) = 1 - p_{3,4}$
+
+		$(p`_1)\times(p`_2)\times(p`_3) = 1 - p_{1,2,3}$
+	\item Nie jest to liniowy układ równań. 
+	\begin{enumerate}
+		\item Rozwiązanie za pomocą zmodyfikowanej eliminacji gaussa.
+		\item Zlogarytmować obustronnie każde z równań.
+	\end{enumerate}
+		
+		$\log{(p`_1)} + \log{(p`_3)} = \log{(1 - p_{1,3}) }$
+
+		$\log{(p`_1)} + \log{(p`_4)} = \log{(1 - p_{1,4}) }$
+
+		$\log{(p`_3)} + \log{(p`_4)} = \log{(1 - p_{3,4}) }$
+
+		$\log{(p`_1)} + \log{(p`_2)} + \log{(p`_3)} = \log{(1 - p_{1,2,3}) }$
+
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Rozwiązywanie układu równań}
+	\begin{itemize}
+		\item Uzyskane w ten sposób parametry $p''_i = \log{(p'_i)}$ dają nam szukane parametry $p_i$ przez ponowne podstawienie: 
+
+		$p_i = 1 - e^{p''_i}$, gdzie e - podstawa logarytmu (dowolna)
+
+		\item Rozwiązanie samego układu nie stanowi problemu
+		\item Wybór odpowiednich równań jest kluczowy - Równania muszą być liniowo niezależne
+		\item Sam wybór stanowi o skuteczności ostatecznego rozwiązania:
+		\begin{enumerate}
+			\item Optymalizacja sumarycznej ilości ``reprezentatów'' w układzie równań. 
+			\item Rozwiązanie $n$ układów, rozpatrując każdy z parametrów z osobna.
+			\item Rozwiązanie $m$ układów równań, i wyliczenie $m$ zestawów parametrów, z których wyliczamy ostateczny zestaw parametrów za pomocą średniej ważonej.
+		\end{enumerate}
+	\end{itemize}
+	Przydatna będzie heurystyka wyboru równań uwzględniającą ich liniową niezależność. Dokładne rozwiązanie może być złożone ${2^n \choose n}$.
 \end{frame}
 
 \begin{frame}{Wyniki}
@@ -138,7 +221,7 @@
 	\begin{figure}[h!]
 		\centering
 		\includegraphics[width=9cm]{euclidian_dist.png}
-		\caption{Odległość euklidesowa wektoru prawdopodobieńst przybliżonych od wzorcowych.}
+		\caption{Odległość euklidesowa.}
 	\end{figure}
 \end{frame}
 
