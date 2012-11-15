@@ -46,14 +46,14 @@ def get_leak(data):
 	rules = tuple([set([i]) for i in negatives] + [set(domain[header[child_node]])])
 	data_total = filter_data(data['data'], rules)
 
-	LEAK = []
+	LEAK = {}
 	for i in range(len(domain[header[child_node]])):
 		rules1 = tuple( [set( [j] ) for j in negatives] + [set( [domain[header[child_node]][i]]) ] )
 		data_i = filter_data(data['data'], rules1)
-		LEAK.append( (domain[header[child_node]][i], len(data_i)/float(len(data_total)) ) )
+		LEAK[domain[header[child_node]][i]] = len(data_i)/float(len(data_total))
 	return LEAK
 
-def get_greedy_params(data):
+def get_greedy_params(data, LEAK):
 	negatives = data['negatives']
 	header = data['header']
 	domain = data['domain']
@@ -72,9 +72,9 @@ def get_greedy_params(data):
 			for k in range(len(domain[header[child_node]])):
 				rules_i = tuple(negatives[:i]) + tuple([positives[i][j]]) + tuple(negatives[i+1:]) + tuple([domain[header[child_node]][k]])
 				value = counter[rules_i]/float(total)
-				params.append((header[i], positives[i][j], domain[header[child_node]][k], value ))
+				params.append(( domain[header[child_node]][k], header[i], positives[i][j], value ))
 				#print rules_i, counter[rules_i], total, counter[rules_i]/float(total)
-	return params
+	return [p for p in params if p[0]!=data['negative_child']]
 
 def encode_eq(data, eq):
 	"""
@@ -172,7 +172,7 @@ def choose_equations(sorted_counts, n, data):
 	##print A, detA
 
 
-def get_smart_params(data):
+def get_smart_params(data, LEAK):
 	negatives = data['negatives']
 	header = data['header']
 	domain = data['domain']
@@ -199,49 +199,56 @@ def get_smart_params(data):
 		assert (tuple(negatives) + tuple([child_param])) in counter, "LEAK combination not found in counter!"
 		del counter[tuple(negatives) + tuple([child_param])]
 
-	# CHOOSE FOR MALIGNANT ONLY
-#	for child_param in domain[header[child_node]]:
-	data_malignant = [d for d in counter.iteritems() if d[0][child_node] == 'Malignant']
-	sorted_counts_mali = sorted(data_malignant, key=lambda i:i[1], reverse=True)
-	sorted_counts_mali_param = []
-	for eq, cnt in sorted_counts_mali:
-		params = eq[:-1]
-		suma = 0
-		for child_param in domain[header[child_node]]:
-			suma+= counter[params+tuple([child_param])]
-		sorted_counts_mali_param.append(tuple([eq, cnt/float(suma)]))
+	final_solution = []
+	for child_param_single in domain[header[child_node]]:
+		if child_param_single == data['negative_child']:
+			continue
+		leak = LEAK[child_param_single]
 
-	#pt(sorted_counts_mali_param)
+		data_single_child_param = [d for d in counter.iteritems() if d[0][child_node] == child_param_single]
+		sorted_counts_single = sorted(data_single_child_param, key=lambda i:i[1], reverse=True)
+		sorted_counts_single_param = []
+		for eq, cnt in sorted_counts_single:
+			params = eq[:-1]
+			suma = 0
+			for child_param in domain[header[child_node]]:
+				suma+= counter[params+tuple([child_param])]
+			sorted_counts_single_param.append(tuple([eq, cnt/float(suma)]))
 
-	#sorted_counts_mali = [(d[0], su) for d in sorted_counts_mali]
+		#pt(sorted_counts_mali_param)
 
-	# how many parameters
-	n = sum(( len(d) for d in positives ))
+		#sorted_counts_mali = [(d[0], su) for d in sorted_counts_mali]
 
-	#for s in sorted_counts_mali:
-		#print s
-	choice = choose_equations(sorted_counts_mali_param, n, data)
-	pt(choice)
-	#print positives
-	vectors = [eq[0] for eq in choice]
-	b = [log(1.0-eq[1]) for eq in choice]
+		# how many parameters
+		n = sum(( len(d) for d in positives ))
 
-	vectors = zip(*vectors)
-	A = np.array(vectors)
-	detA = np.linalg.det(A)
+		#for s in sorted_counts_mali:
+			#print s
+		choice = choose_equations(sorted_counts_single_param, n, data)
 
-	Y = []
-	for i in range(n):
-		p = np.array(vectors[:i] + [b] + vectors[i+1:])
-		detP = np.linalg.det(p)
-		Y.append(1.0-e**(detP/detA))
+		print child_param_single
+		pt(choice)
+		vectors = [eq[0] for eq in choice]
+		b = [1.0 - (1.0-eq[1])*(1.0-leak)**(sum(eq[0])-1) for eq in choice]
+		b = [log(1.0-bb) for bb in b]
 
+		vectors = zip(*vectors)
+		A = np.array(vectors)
+		detA = np.linalg.det(A)
 
-	solution = []
-	for i in range(len(Y)):
-		new_eq = [0]*i+[1]+[0]*(len(Y)-1-i)
-		solution.append([decode_eq_header(data,new_eq), decode_eq_single(data,new_eq), Y[i]])
-	pt(solution)
+		Y = []
+		for i in range(n):
+			p = np.array(vectors[:i] + [b] + vectors[i+1:])
+			detP = np.linalg.det(p)
+			Y.append(1.0-e**(detP/detA))
+
+		solution = []
+		for i in range(len(Y)):
+			new_eq = [0]*i+[1]+[0]*(len(Y)-1-i)
+			solution.append([child_param_single, decode_eq_header(data,new_eq), decode_eq_single(data,new_eq), Y[i]])
+		#pt(solution)
+		final_solution.extend(solution)
+	return final_solution
 
 	#return tuple(solution)
 
@@ -252,28 +259,52 @@ def main():
 
 	# TODO: HARDCODED child_node and negatives!
 	data['negatives'] = ['False','False','False','Medium']
+
+	#simple cancer max
+	#data['negatives'] = ['False']*2
+	# noisy or network
+	#data['negatives'] = ['False']*4
+	data['negative_child'] = 'No'
 	data['positives'] = get_positives(data)
 	data['counter'] = Counter(data['data'])
-	data['child_node'] = 4
+	data['child_node'] = -1
 
 	LEAK  = get_leak(data)
-	GREEDY_PARAMS = get_greedy_params(data)
+	REAL = (
+		('Malignant', 'Smoker', 'TwoPacks', 0.23),
+		('Malignant', 'Smoker', 'OnePack', 0.11),
+		('Malignant', 'Genetic', 'True', 0.25),
+		('Benign', 'Smoker', 'TwoPacks', 0.25),
+		('Benign', 'Smoker', 'OnePack', 0.14),
+		('Benign', 'Genetic', 'True', 0.55),
+		#('No', 'Smoker', 'TwoPacks', 0.52),
+		#('No', 'Smoker', 'OnePack', 0.75),
+		#('No', 'Genetic', 'True', 0.2),
+	)
+	REAL_LEAK = (
+		('Malignant', 0.005),
+		('Benign', 0.015),
+		('No', 0.98),
+	)
+	GREEDY_PARAMS = get_greedy_params(data, LEAK)
 	#for P in PARAMS:
 	#	print P
-	#for L in LEAK:
-	#	print L
-	SMART_PARAMS = get_smart_params(data)
-
-def test_meets_rules():
-	data = [['a','b','c'], ['a','b','z']]
-	rules = (
-		set(['a']),
-		set(['b']),
-		set(['c']),
-	)
-	print filter_data(data,rules)
-
-
+	for L in LEAK.items():
+		print L
+	SMART_PARAMS = get_smart_params(data, LEAK)
+	#print "GREEDY"
+	#pt(GREEDY_PARAMS)
+	#print "SMART"
+	#pt(SMART_PARAMS)
+	REALmap = sorted([("|".join(v[:-1]), v[-1] ) for v in REAL], key=lambda i:i[0])
+	GREEDYmap = sorted([("|".join(v[:-1]), v[-1] ) for v in GREEDY_PARAMS], key=lambda i:i[0])
+	SMARTmap = sorted([("|".join(v[:-1]), v[-1] ) for v in SMART_PARAMS], key=lambda i:i[0])
+	#for i in SMARTmap:
+		#print i
+	print "NAME REAL GREEDY SMART"
+	for i in range(len(REALmap)):
+		print REALmap[i][0], REALmap[i][1], GREEDYmap[i][1], SMARTmap[i][1]
+		#print REALmap[i], REALmap[i], GREEDYmap[i], SMARTmap[i]
 
 if __name__ == "__main__":
 	#test_meets_rules()
