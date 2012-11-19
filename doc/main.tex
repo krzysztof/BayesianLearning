@@ -1,0 +1,151 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+
+\title{Bayesian Scratchpad}
+\author{Krzysztof Nowak}
+\date{September 2012}
+
+\begin{document}
+
+\maketitle
+\section{BACKUP}
+\section{Introduction}
+Title: Learning Canonical Models from Data.
+
+Scope:
+1. Introduction to Bayesian Networks and knowledge engineering.
+2. Describe canonical models and their significance.
+3. Propose solution to improve learning efforts for noisy MIN/MAX models.
+4. Implement and test proposed solution on various sets of data.
+5. Compare results to data gained from standard approach.
+
+\section{Cases of records}
+Let's assume we work on a Network consisting of 4 nodes.
+\subsection{Straightforward cases (1 parameter)}
+Parameters $x_i$ for $i \in \{1,2,3,4\}$
+
+$     x_1,  \bar{x_2}, \bar{x_3}, \bar{x_4} = p_1$
+
+$\bar{x_1},      x_2,  \bar{x_3}, \bar{x_4} = p_2$
+
+$\bar{x_1}, \bar{x_2},      x_3,  \bar{x_4} = p_3$
+
+$\bar{x_1}, \bar{x_2}, \bar{x_3},      x_4  = p_4$
+
+
+\subsection{Non-trivial cases (2 parameters)}
+
+Parameters $x_1$ and $x_2$:
+
+t
+
+Parameters $x_1$ and $x_3$:
+
+$     x_1,  \bar{x_2},     x_3,  \bar{x_4} = 1-(1-p_1)*(1-p_3) = v_3$
+
+...
+
+\subsection{Non-trivial cases (3 parameters)}
+
+Parameters $x_1$, $x_2$ and $x_3$:
+
+$     x_1,       x_2,      x_3, \bar{x_4} = 1-(1-p_1)*(1-p_2)*(1-p_3) = v_4$
+
+$     x_1,       x_2, \bar{x_3},     x_4  = 1-(1-p_1)*(1-p_2)*(1-p_4) = v_5$
+
+$     x_1,  \bar{x_2},      x_3,     x_4  = 1-(1-p_1)*(1-p_3)*(1-p_4) = v_6$
+
+$\bar{x_1},      x_2,       x_3,     x_4  = 1-(1-p_2)*(1-p_3)*(1-p_4) = v_7$
+
+\subsection{Equations intro}
+
+
+Equations included in a set of simultaneous equations can be selected by several factors. 
+
+Ordering equations by their frequency of occurence is a good selector, but it may lead to problems when used blindly.
+In order to get $n$ parameters, we have to select such equations that contain each of the parameters at least once, otherwise we would get $n$ equations, able to solve only $k$ parameters for $k < n$.
+Other approach may be solving several systems of equations, each solving different subset of parameters.
+
+\begin{itemize}
+    \item Equations may contradict eachother
+\end{itemize}
+
+\subsection{Solving equations}
+
+Once we choose a system of equations, we can simplify it.
+
+A set of parameters such as $     x_1,       \bar{x_2},      x_3, \bar{x_4}$ generates equation $1-(1-p_1)*(1-p_3) = v_1$.
+
+Let us use the following substitution:
+
+$p_i' = 1 - p_i$ for each of the parameters.
+
+The original equation is equal to:
+$1-p_1'*p_3'=v_1$
+
+which can further be transformed into
+$p_1'*p_3' = 1 - v_1$.
+Right hand side of the equation is a real number, so what we really get is
+$p_1'*p_3' = v_1'$, where $v_1' = 1 - v_1$.
+
+What our method does, is calculate the values $p_k'$, which can later be turned into original parameters $p_k$ using the previous substitution. 
+
+Exemplary system of equations may look like this:
+
+$p_1'*p_2'*p_3' = v_1'$
+
+$p_1'*p_2'*p_4' = v_2'$
+
+$p_1'*p_3'*p_4' = v_3'$
+
+$p_2'*p_3'*p_4' = v_4'$
+
+In order to solve it programatically, we need two things. Representation (Data Structure) and a method (algorithm).
+
+The system of equation is represented as a matrix in which cell is a exponent of given parameter. Using the previous example, what we would get is:
+
+\begin{equation*}
+
+\left[\begin{array}{cccc}1&1&1&0\\1&1&0&1\\1&0&1&1\\0&1&1&1\end{array}\right]
+
+\left[\begin{array}{c}v_1'\\v_2'\\v_3'\\v_4'\end{array}\right]
+
+\end{equation*}
+Notice that left hand side of each of the equations is a product of parameters (not a sum), we have to work on exponents instead of factors.
+
+All we have to do now, is use a Gaussian elimination method in order to get a diagonal matrix.
+We have to remember though, that since we are working on exponents instead of products, elementary row operations for right side of the equations are slightly different.
+\begin{itemize}
+    \item Row switching - Switching row stays the same.
+    \item Row multiplication - Multiplying any of the values in exponents matrix by a constant rational number $n/m$ has to be represented on right side (parameters $v_k'$) by raising it to the power of $n/m$.
+    \item Row addition - Adding rows $k-th$ and $l-th$ has to be represented by multiplication of parameters $v_k$ and $v_l$, (subtraction is represented by divison).
+\end{itemize}
+
+Examples of modified elementary row operations:
+
+$
+\left[\begin{array}{cccc}1&1&1&0\\1&1&0&1\\1&0&1&1\\0&1&1&1\end{array}\right]
+\left[\begin{array}{c}p_1'\\p_2'\\p_3'\\p_4'\end{array}\right] = 
+\left[\begin{array}{c}v_1'\\v_2'\\v_3'\\v_4'\end{array}\right]
+$
+
+Let's say we want to multiply second row by a constant $\frac{3}{4}$ and then add it to third row. Outcome would be following:
+
+$
+\left[\begin{array}{cccc}1&1&1&0\\\frac{3}{4}&\frac{3}{4}&0&\frac{3}{4}\\1&0&1&1\\0&1&1&1\end{array}\right]
+\left[\begin{array}{c}p_1'\\p_2'\\p_3'\\p_4'\end{array}\right] = 
+\left[\begin{array}{c}v_1'\\v_2'^{\frac{3}{4}}\\v_3'\\v_4'\end{array}\right]
+$
+
+Multiplying row by a constant results in raising $v_2'$ to $3/4$ power.
+
+$
+\left[\begin{array}{cccc}1&1&1&0\\\frac{3}{4}&\frac{3}{4}&0&\frac{3}{4}\\\frac{7}{4}&\frac{3}{4}&1&\frac{7}{4}\\0&1&1&1\end{array}\right]
+\left[\begin{array}{c}p_1'\\p_2'\\p_3'\\p_4'\end{array}\right] = 
+\left[\begin{array}{c}v_1'\\v_2'^{\frac{3}{4}}\\v_2'^{\frac{3}{4}}*v_3'\\v_4'\end{array}\right]
+$
+
+Adding rows together results in multiplying $v_2'^{3/4}$ by $v_3'$.
+
+\end{document}
+

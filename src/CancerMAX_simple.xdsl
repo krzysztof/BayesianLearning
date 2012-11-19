@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<smile version="1.0" id="Network1" numsamples="1000" discsamples="10000">
+	<nodes>
+		<cpt id="Smoker">
+			<state id="TwoPacks" />
+			<state id="OnePack" />
+			<state id="False" />
+			<probabilities>0.1 0.23 0.67</probabilities>
+		</cpt>
+		<cpt id="Genetic">
+			<state id="True" />
+			<state id="False" />
+			<probabilities>0.22 0.78</probabilities>
+		</cpt>
+		<noisymax id="LungCancer">
+			<state id="Malignant" />
+			<state id="Benign" />
+			<state id="No" />
+			<parents>Smoker Genetic</parents>
+			<strengths>0 1 2 0 1</strengths>
+			<parameters>0.23 0.25 0.52 0.11 0.14 0.75 0 0 1 0.25 0.55 0.2 0 0 1 0.005000000000000004 0.01500000000000001 0.98</parameters>
+		</noisymax>
+	</nodes>
+	<extensions>
+		<genie version="1.0" app="GeNIe 2.0.4535.0" name="Network1" faultnameformat="nodestate">
+			<node id="Smoker">
+				<name>Smoker</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>123 238 206 296</position>
+				<barchart active="true" width="128" height="64" />
+			</node>
+			<node id="Genetic">
+				<name>Genetic</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>449 225 540 295</position>
+				<barchart active="true" width="128" height="64" />
+			</node>
+			<node id="LungCancer">
+				<name>LungCancer</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>302 445 370 487</position>
+				<barchart active="true" width="128" height="64" />
+			</node>
+		</genie>
+	</extensions>
+</smile>

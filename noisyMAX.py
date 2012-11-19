@@ -1,5 +1,6 @@
 import numpy as np
 import sys
+import random
 from collections import Counter
 from itertools import combinations
 from math import e,log
@@ -35,6 +36,7 @@ def get_positives(data):
 	domain = data['domain']
 	negatives = data['negatives']
 	header = data['header']
+	#print negatives
 	return tuple([tuple(set(domain[header[i]]) - set([negatives[i]])) for i in range(len(negatives))])
 
 def get_leak(data):
@@ -93,7 +95,10 @@ def encode_eq(data, eq):
 
 def decode_eq_single(data, eq):
 	"""
-	assumes eq = [0,0, .. ,1, .., 0, 0]
+	@param eq: list of type [0,0, .. ,1, .., 0, 0]
+	@type eq: list
+	@return: named parameter 'True'
+	@rtype: string
 	"""
 	new_eq = decode_eq(data, eq)
 	positives = data['positives']
@@ -102,12 +107,18 @@ def decode_eq_single(data, eq):
 			return new_eq[i]
 
 def decode_eq_header(data, eq):
+	"""
+	@param eq: list of type [0,0, .. ,1, .., 0, 0]
+	@type eq: list
+	@return: header name e.g. 'Smoker'
+	@rtype: string
+	"""
 	positives = data['positives']
 	p_counts = sum([[i]*len(positives[i]) for i in range(len(positives))],[])
 	index = eq.index(1)
 	return data['header'][p_counts[index]]
 
-def decode_eq(data, eq):
+def decode_eq(eq, data):
 	"""
 	@param eq: (0,1,1,1,0,0,0)
 	@return: ('A','B','C')
@@ -126,21 +137,21 @@ def decode_eq(data, eq):
 		suma+=p_counts[i]
 	return tuple(final)
 
+
 def equation_valid(encoded_eq):
 	vectors = [eq[0] for eq in encoded_eq]
 	A = np.array(vectors)
 	detA = np.linalg.det(A)
 	return detA > 10e-7
 
-
-def choose_equations(sorted_counts, n, data):
-	# remove child params and get equation only
-	# TODO: HARDCODED -1 as child node!
+def choose_equations(equations, n, data):
+	# Assuming that equations are ordered by preference
+	#
 	# ( (('A','B'), 33), ...)
-	sorted_equations = tuple([(eq[:-1],cnt) for eq,cnt in sorted_counts])
+	#sorted_equations = tuple([(eq[:-1],cnt) for eq,cnt in sorted_counts])
 
 	# ( ((1,0,0,1,1),33), ...)
-	encoded_eq = [encode_eq(data, eq) for eq in sorted_equations]
+	encoded_eq = [encode_eq(data, eq) for eq in equations]
 
 	#for eq in encoded_eq:
 		#print eq
@@ -192,12 +203,17 @@ def get_smart_params(data, LEAK):
 	#print sorted_counts
 
 	# make new counter
-	counter = Counter(data['data'])
+	# TODO: HARDCODED - assuming that -1 is the only child, and is last in the column)
+	counter = Counter([d[:-1] for d in data['data']])
+
+	sorted_counts = sorted(counter.items(), key=lambda i:i[1], reverse=True)
+	eq_choice = choose_equations(sorted_counts, n, data)
+
 
 	#delete leak
-	for child_param in domain[header[child_node]]:
-		assert (tuple(negatives) + tuple([child_param])) in counter, "LEAK combination not found in counter!"
-		del counter[tuple(negatives) + tuple([child_param])]
+	#for child_param in domain[header[child_node]]:
+		#assert (tuple(negatives) + tuple([child_param])) in counter, "LEAK combination not found in counter!"
+		#del counter[tuple(negatives) + tuple([child_param])]
 
 	final_solution = []
 	for child_param_single in domain[header[child_node]]:
@@ -228,9 +244,10 @@ def get_smart_params(data, LEAK):
 
 		print child_param_single
 		pt(choice)
+
 		vectors = [eq[0] for eq in choice]
-		b = [1.0 - (1.0-eq[1])*(1.0-leak)**(sum(eq[0])-1) for eq in choice]
-		b = [log(1.0-bb) for bb in b]
+		b = [1.0 - (1.0 - eq[1]) * (1.0 - leak) ** (sum(eq[0]) - 1) for eq in choice]
+		b = [log(1.0 - bb) for bb in b]
 
 		vectors = zip(*vectors)
 		A = np.array(vectors)
@@ -305,6 +322,7 @@ def main():
 	for i in range(len(REALmap)):
 		print REALmap[i][0], REALmap[i][1], GREEDYmap[i][1], SMARTmap[i][1]
 		#print REALmap[i], REALmap[i], GREEDYmap[i], SMARTmap[i]
+
 
 if __name__ == "__main__":
 	#test_meets_rules()
