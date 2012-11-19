@@ -130,7 +130,7 @@ class BayesianDataSet(object):
 		detA = np.linalg.det(A)
 		return detA > 10e-7
 
-	def _choose_equations(self, equations, k):
+	def _choose_equations(self, equations, k, i):
 		"""
 		@param equations: [((0,0,1,0,1),2341), ...]
 		@type equations: list
@@ -139,10 +139,10 @@ class BayesianDataSet(object):
 		"""
 
 		## RANDOM TEST
-		choice = random.sample(equations,k)
-		while(not self._equation_set_valid(choice)):
-			choice = random.sample(equations, k)
-		return choice
+		#choice = random.sample(equations,k)
+		#while(not self._equation_set_valid(choice)):
+		#	choice = random.sample(equations, k)
+		#return choice
 		##
 		t = k
 		chosen = equations[:k]
@@ -174,7 +174,22 @@ class BayesianDataSet(object):
 			detP = np.linalg.det(p)
 			Y.append(1.0-e**(detP/detA))
 		return Y
-		#print a,b
+
+	def _solve_prod_equation_single(self, equation_set, leak, param):
+		"""
+		@param equation_set: [ ((0,1,0,0,1,0), 0.51), ((0,1,0,0,0,0),0.23), ...]
+		@return: solution as a list of floats [0.31, 0.33, 0.21...]
+		"""
+		a = [equation for equation, value in equation_set]
+		b = [log(1.0 - (1.0 - (1.0-value)*(1.0-leak)**(sum(equation)-1))) for equation, value in equation_set]
+
+		a = zip(*a)
+
+		A = np.array(a)
+		detA = np.linalg.det(A)
+		p = np.array(a[:param] + [b] + a[param+1:])
+		detP = np.linalg.det(p)
+		return 1.0-e**(detP/detA)
 
 	def _get_parameter(self, equation, child_node):
 		"""
@@ -266,32 +281,30 @@ class BayesianDataSet(object):
 		#for eq, cnt in encoded_parent_counts_s:
 		#	print eq, cnt
 
-		chosen_equations = self._choose_equations(encoded_parent_counts_s, K)
-		## PRINT CHOSEN EQUATIONS BELOW
-		for eq, cnt in chosen_equations:
-			print eq,cnt
-
-		chosen_equations_decoded = []
-		for eq, cnt in chosen_equations:
-			chosen_equations_decoded.append((self._decode_equation(eq,child_node), cnt,))
-
-		#for eq, cnt in chosen_equations_decoded:
-		#	print eq,cnt
-
 		final_output = []
 		for state in non_char_states:
 			#equations with float values calculated on the right side
-			chosen_equations_parametrized = []
-			for i in range(len(chosen_equations)):
-				nominator = float(parent_child_counts[tuple(chosen_equations_decoded[i][0])+(state,)])
-				denominator = float(chosen_equations_decoded[i][1])
-				chosen_equations_parametrized.append((chosen_equations[i][0], nominator/denominator))
-			solution = self._solve_prod_equation(chosen_equations_parametrized, LEAK[state])
+			solution = []
+			for i in range(K):
+				chosen_equations = self._choose_equations(encoded_parent_counts_s, K, i)
+				## PRINT CHOSEN EQUATIONS BELOW
+				for eq, cnt in chosen_equations:
+					print eq,cnt
+
+				chosen_equations_decoded = []
+				for eq, cnt in chosen_equations:
+					chosen_equations_decoded.append((self._decode_equation(eq,child_node), cnt,))
+
+				chosen_equations_parametrized = []
+				for j in range(len(chosen_equations_decoded)):
+					nominator = float(parent_child_counts[tuple(chosen_equations_decoded[j][0])+(state,)])
+					denominator = float(chosen_equations_decoded[j][1])
+					chosen_equations_parametrized.append((chosen_equations[j][0], nominator/denominator))
+				solution.append(self._solve_prod_equation_single(chosen_equations_parametrized, LEAK[state], i))
 
 			for i in range(K):
 				param = self._get_parameter([0]*i+[1]+[0]*(K-1-i), child_node)
 				final_output.append( (((self.domain[child_node.column_index][state],)+param), solution[i]) )
-				#print ((self.domain[child_node.column_index][state],)+param), solution[i]
 			#print solution
 			#for eq, cnt in chosen_equations_parametrized:
 				#print "state%s: %s %s"%(state,eq,cnt)
