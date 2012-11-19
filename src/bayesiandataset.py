@@ -136,6 +136,8 @@ class BayesianDataSet(object):
 		@type equations: list
 		@param k: number of equations to pick
 		@type k: int
+		@param i: column in encoded equation (parameter) to choose for
+		@type i: int
 		"""
 
 		## RANDOM TEST
@@ -143,18 +145,36 @@ class BayesianDataSet(object):
 		#while(not self._equation_set_valid(choice)):
 		#	choice = random.sample(equations, k)
 		#return choice
-		##
-		t = k
-		chosen = equations[:k]
-		found = False
-		while(t <= len(equations) and not found):
-			for comb in combinations(equations[:t], k):
-				if self._equation_set_valid(comb):
-					chosen = comb
-					found = True
-					break;
-			t+=1
-		return chosen
+		## RANDOM TEST
+
+		## CHECKING COMBINATIONS
+		#t = k
+		#chosen = equations[:k]
+		#found = False
+		#while(t <= len(equations) and not found):
+		#	for comb in combinations(equations[:t], k):
+		#		if self._equation_set_valid(comb):
+		#			chosen = comb
+		#			found = True
+		#			break;
+		#	t+=1
+		#return chosen
+
+		## CHECKING COMBINATIONS
+		def comparator(a,b):
+			if a[0][i] > b[0][i]:
+				return -1
+			elif a[0][i] < b[0][i]:
+				return 1
+			elif a[1] > b[1]:
+				return -1
+			elif a[1] < b[1]:
+				return 1
+			return 0
+		equations2 = list(equations)
+		equations2.sort(comparator)
+		for eq  in equations2:
+			print eq
 
 	def _solve_prod_equation(self, equation_set, leak):
 		"""
@@ -286,6 +306,7 @@ class BayesianDataSet(object):
 			#equations with float values calculated on the right side
 			solution = []
 			for i in range(K):
+				# TODO: turn into SOLVE function (both choosing and solving) because it's easier to solve non KxK matrices (e.g. 2x2 if it's better)
 				chosen_equations = self._choose_equations(encoded_parent_counts_s, K, i)
 				## PRINT CHOSEN EQUATIONS BELOW
 				for eq, cnt in chosen_equations:
