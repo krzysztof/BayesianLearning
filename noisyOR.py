@@ -48,6 +48,9 @@ def read_data(filename):
 def choose_greedy(full, params):
 	param_pairs = sorted(params.items(), key=lambda p:p[1], reverse=True)
 
+	for p in param_pairs:
+		print p
+
 	checked = [False]*len(param_pairs[0][0])
 
 	chosen = []

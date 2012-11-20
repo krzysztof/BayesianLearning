@@ -130,51 +130,6 @@ class BayesianDataSet(object):
 		detA = np.linalg.det(A)
 		return detA > 10e-7
 
-	def _choose_equations(self, equations, k, i):
-		"""
-		@param equations: [((0,0,1,0,1),2341), ...]
-		@type equations: list
-		@param k: number of equations to pick
-		@type k: int
-		@param i: column in encoded equation (parameter) to choose for
-		@type i: int
-		"""
-
-		## RANDOM TEST
-		#choice = random.sample(equations,k)
-		#while(not self._equation_set_valid(choice)):
-		#	choice = random.sample(equations, k)
-		#return choice
-		## RANDOM TEST
-
-		## CHECKING COMBINATIONS
-		#t = k
-		#chosen = equations[:k]
-		#found = False
-		#while(t <= len(equations) and not found):
-		#	for comb in combinations(equations[:t], k):
-		#		if self._equation_set_valid(comb):
-		#			chosen = comb
-		#			found = True
-		#			break;
-		#	t+=1
-		#return chosen
-
-		## CHECKING COMBINATIONS
-		def comparator(a,b):
-			if a[0][i] > b[0][i]:
-				return -1
-			elif a[0][i] < b[0][i]:
-				return 1
-			elif a[1] > b[1]:
-				return -1
-			elif a[1] < b[1]:
-				return 1
-			return 0
-		equations2 = list(equations)
-		equations2.sort(comparator)
-		for eq  in equations2:
-			print eq
 
 	def _solve_prod_equation(self, equation_set, leak):
 		"""
@@ -264,6 +219,136 @@ class BayesianDataSet(object):
 				final_output.append( (((self.domain[child_node.column_index][state],)+param_name), value, ) )
 		return final_output
 
+	def _choose_equations(self, equations, p_col, parent_child_counts, child_node, state):
+
+		"""
+		@param equations: [((0,0,1,0,1),2341), ...]
+		@type equations: list
+		@param k: number of equations to pick
+		@type k: int
+		@param i: column in encoded equation (parameter) to choose for
+		@type i: int
+		"""
+
+		## RANDOM TEST
+		#choice = random.sample(equations,k)
+		#while(not self._equation_set_valid(choice)):
+		#	choice = random.sample(equations, k)
+		#return choice
+		## RANDOM TEST
+
+		encoded_parent_counts_s2 = list(equations)
+		def compare(a,b):
+			if a[0][p_col] + b[0][p_col] == 1:
+				return -1 if a[0][p_col]==1 else 1
+			else:
+				return -1 if a[1]>b[1] else 1
+		encoded_parent_counts_s2.sort(compare)
+
+		print "Double sorted equations for column", p_col
+		for eq, cnt in encoded_parent_counts_s2:
+			print eq, cnt
+
+		#for eq, cnt in parent_child_counts.items():
+		#	print eq, cnt
+
+		# CHECK FOR NAIVE CASE
+		if sum(encoded_parent_counts_s2[0][0]) == 1:
+			nominator = float(parent_child_counts[tuple(self._decode_equation(encoded_parent_counts_s2[0][0], child_node)+(state,))])
+			denominator = float(encoded_parent_counts_s2[0][1])
+			print "chosen naively for column", p_col
+			return ([[1, ], nominator/denominator],), 0
+
+		## CHECKING COMBINATIONS
+		K = len(equations[0][0])
+		t = K
+		chosen_equations = equations[:K]
+		found = False
+		while(t <= len(equations) and not found):
+			for comb in combinations(equations[:t], K):
+				if self._equation_set_valid(comb):
+					chosen_equations = comb
+					found = True
+					break
+			t+=1
+		## END CHECKING COMBINATIONS
+
+		chosen_equations_decoded = []
+		for eq, cnt in chosen_equations:
+			chosen_equations_decoded.append((self._decode_equation(eq, child_node), cnt,))
+
+		#PART 3: parametrize equations
+
+		chosen_equations_parametrized = []
+		for j in range(len(chosen_equations_decoded)):
+			nominator = float(parent_child_counts[tuple(chosen_equations_decoded[j][0])+(state,)])
+			denominator = float(chosen_equations_decoded[j][1])
+			chosen_equations_parametrized.append((chosen_equations[j][0], nominator/denominator))
+
+		return chosen_equations_parametrized, p_col
+
+		## CHECKING COMBINATIONS
+		#def comparator(a,b):
+		#	if a[0][i] > b[0][i]:
+		#		return -1
+		#	elif a[0][i] < b[0][i]:
+		#		return 1
+		#	elif a[1] > b[1]:
+		#		return -1
+		#	elif a[1] < b[1]:
+		#		return 1
+		#	return 0
+		#equations2 = list(equations)
+		#equations2.sort(comparator)
+		#for eq  in equations2:
+		#	print eq
+
+
+	def _solve_for_parameter(self, encoded_parent_counts_s, K, p_col, child_node, parent_counts, parent_child_counts, leak, state):
+		"""
+		@param K: how many parameters there are to solve totally
+		@param p_col: which parameter we are solving (column)
+		@param child_node: child_node information
+		@param parent_counts: Counter of parent combinations
+		@param parent_child_counts: Counter of parent+child_state combinations
+		@param p_col: which parameter (column) we want to solve for
+		@param leak: leak value
+		"""
+		print "\n\n"
+
+		#PART 1: choosing equations
+
+
+		# assume that chosen_equations are parametrized already
+		chosen_equations, new_column = self._choose_equations(encoded_parent_counts_s, p_col, parent_child_counts, child_node, state)
+
+		#fixed = [0,1,3,7]
+		#chosen_equations = [encoded_parent_counts_s[j] for j in fixed]
+
+
+		#PART 2: decode equations to take values from Counter
+
+
+		#print "equations for parameter", p_col
+		#for eq, val in chosen_equations_parametrized:
+		#	print eq, val
+
+		#PART 4: solving equations
+
+		#print chosen_equations, new_column
+		#for eq, val in chosen_equations:
+		#	print eq, val, "!!"
+		a = [eq for eq, val in chosen_equations]
+		b = [log(1.0 - (1.0 - (1.0-value)*(1.0-leak)**(sum(equation)-1))) for equation, value in chosen_equations]
+
+		a = zip(*a)
+
+		A = np.array(a)
+		detA = np.linalg.det(A)
+		p = np.array(a[:new_column] + [b] + a[new_column+1:])
+		detP = np.linalg.det(p)
+		return 1.0-e**(detP/detA)
+
 	def solveForChild(self, child_column_index):
 		assert child_column_index in self.children, "Children of index %d not set!" % ( child_column_index )
 		child_node = self.children[child_column_index]
@@ -306,22 +391,26 @@ class BayesianDataSet(object):
 			#equations with float values calculated on the right side
 			solution = []
 			for i in range(K):
-				# TODO: turn into SOLVE function (both choosing and solving) because it's easier to solve non KxK matrices (e.g. 2x2 if it's better)
-				chosen_equations = self._choose_equations(encoded_parent_counts_s, K, i)
-				## PRINT CHOSEN EQUATIONS BELOW
-				for eq, cnt in chosen_equations:
-					print eq,cnt
 
-				chosen_equations_decoded = []
-				for eq, cnt in chosen_equations:
-					chosen_equations_decoded.append((self._decode_equation(eq,child_node), cnt,))
+				## NEW APPROACH OF SOLVING RIGHT AWAY
+				y = self._solve_for_parameter(encoded_parent_counts_s, K, i, child_node, parent_counts, parent_child_counts, LEAK[state], state)
+				solution.append(y)
+				## NEW APPROACH OF SOLVING RIGHT AWAY
 
-				chosen_equations_parametrized = []
-				for j in range(len(chosen_equations_decoded)):
-					nominator = float(parent_child_counts[tuple(chosen_equations_decoded[j][0])+(state,)])
-					denominator = float(chosen_equations_decoded[j][1])
-					chosen_equations_parametrized.append((chosen_equations[j][0], nominator/denominator))
-				solution.append(self._solve_prod_equation_single(chosen_equations_parametrized, LEAK[state], i))
+				## OLD APPROACH OF SEPARATING CHOOSING FROM SOLVING
+				#chosen_equations = self._choose_equations(encoded_parent_counts_s, K, i)
+
+				#chosen_equations_decoded = []
+				#for eq, cnt in chosen_equations:
+				#	chosen_equations_decoded.append((self._decode_equation(eq,child_node), cnt,))
+
+				#chosen_equations_parametrized = []
+				#for j in range(len(chosen_equations_decoded)):
+				#	nominator = float(parent_child_counts[tuple(chosen_equations_decoded[j][0])+(state,)])
+				#	denominator = float(chosen_equations_decoded[j][1])
+				#	chosen_equations_parametrized.append((chosen_equations[j][0], nominator/denominator))
+				#solution.append(self._solve_prod_equation_single(chosen_equations_parametrized, LEAK[state], i))
+				## OLD APPROACH OF SEPARATING CHOOSING FROM SOLVING
 
 			for i in range(K):
 				param = self._get_parameter([0]*i+[1]+[0]*(K-1-i), child_node)
@@ -329,7 +418,7 @@ class BayesianDataSet(object):
 			#print solution
 			#for eq, cnt in chosen_equations_parametrized:
 				#print "state%s: %s %s"%(state,eq,cnt)
-			return final_output
+		return final_output
 
 
 	def __str__(self):
