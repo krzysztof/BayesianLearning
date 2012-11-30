@@ -4,7 +4,7 @@ from bayesiandataset import BayesianDataSet, ChildNode
 
 class BayesianDataSetTest(unittest.TestCase):
 	def setUp(self):
-		self.bn0 = BayesianDataSet('testData/CancerMAX1.txt')
+		self.bn0 = BayesianDataSet('testData/CancerMAX1.txt') # THIS IS NOT 20k test case
 		self.bn0.addChildNode(4,'No', [0,1,2,3], ['False', 'False', 'False', 'Medium'])
 		self.child_node0 = self.bn0.children[4]
 
@@ -17,6 +17,11 @@ class BayesianDataSetTest(unittest.TestCase):
 		#[ 0 :[0,1,2], 1:[0, 1], 2:[0, 1], 3:[0, 1, 2]]
 		# parent char states are:
 		# [2,1,1,1]
+		# string domain:
+		##(('OnePack', 'TwoPacks', 'False'), ('True', 'False'), ('True', 'False'), ('Bad', 'Medium', 'Good'), ('Benign', 'Malignant', 'No'))
+
+		e0 = self.bn0._decode_equation([1,0,0,0,1,0], self.child_node0)
+		print [self.bn0.domain[i][e0[i]] for i in range(len(e0))]
 		pairs = (
 			((1,0,0,1), (1,0,1,1,0,0)),
 			((2,1,0,0), (0,0,0,1,0,1)),

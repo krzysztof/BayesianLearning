@@ -137,6 +137,8 @@ class BayesianDataSet(object):
 		@return: solution as a list of floats [0.31, 0.33, 0.21...]
 		"""
 		a = [equation for equation, value in equation_set]
+		# TODO: consider below
+		#b = [log((1.0-value)*(1.0-leak)**(sum(equation)-1))) for equation, value in equation_set]
 		b = [log(1.0 - (1.0 - (1.0-value)*(1.0-leak)**(sum(equation)-1))) for equation, value in equation_set]
 
 		a = zip(*a)
@@ -237,6 +239,13 @@ class BayesianDataSet(object):
 		#return choice
 		## RANDOM TEST
 
+		for eq, cnt in equations:
+			print eq, cnt
+
+		K = len(equations[0][0])
+
+		best_equation_set, new_column, equation_weights = None, None, None
+
 		encoded_parent_counts_s2 = list(equations)
 		def compare(a,b):
 			if a[0][p_col] + b[0][p_col] == 1:
@@ -249,18 +258,55 @@ class BayesianDataSet(object):
 		for eq, cnt in encoded_parent_counts_s2:
 			print eq, cnt
 
+		# fixed solutions!
+		# BEGIN COUNT
+		n0 = float(parent_child_counts[tuple(self._decode_equation([1,0,0,0,1,0], child_node)+(state,))])
+		c0 = 1895.
+
+		n1 = float(parent_child_counts[tuple(self._decode_equation([0,0,0,0,1,0], child_node)+(state,))])
+		print self._decode_equation([1,0,0,0,1,0], child_node),state, n0
+		print self._decode_equation([0,0,0,0,1,0], child_node),state, n1
+		#print n1
+		#print float(parent_child_counts[tuple(self._decode_equation([0,0,0,0,1,1], child_node)+(state,))])
+		c1 = 5697.
+		solutions = {
+			0: [[[1,1],n0/c0], [[0, 1],n1/c1]],
+		}
+
+		if p_col in solutions:
+			print "fixed solution for column %d"%p_col
+			print solutions[p_col],0
+			return solutions[p_col], 0
+		# END COUNT
+
+
+		#use naive as best solution
+		naive_eq = [0]*K
+		naive_eq[p_col] = 1
+		for eq, cnt in encoded_parent_counts_s2:
+			if tuple(eq) == tuple(naive_eq):
+				nominator = float(parent_child_counts[tuple(self._decode_equation(naive_eq, child_node)+(state,))])
+				best_equation_set = [[[1], nominator/cnt,],]
+				equation_weights = [cnt]
+				new_column = 0
+				#naive_cnt = cnt
+
+		print best_equation_set, new_column, equation_weights
+
+		# return counted
+		return best_equation_set, new_column
+
 		#for eq, cnt in parent_child_counts.items():
 		#	print eq, cnt
 
 		# CHECK FOR NAIVE CASE
-		if sum(encoded_parent_counts_s2[0][0]) == 1:
-			nominator = float(parent_child_counts[tuple(self._decode_equation(encoded_parent_counts_s2[0][0], child_node)+(state,))])
-			denominator = float(encoded_parent_counts_s2[0][1])
-			print "chosen naively for column", p_col
-			return ([[1, ], nominator/denominator],), 0
+		#if sum(encoded_parent_counts_s2[0][0]) == 1:
+		#	nominator = float(parent_child_counts[tuple(self._decode_equation(encoded_parent_counts_s2[0][0], child_node)+(state,))])
+		#	denominator = float(encoded_parent_counts_s2[0][1])
+		#	print "chosen naively for column", p_col
+		#	return ([[1, ], nominator/denominator],), 0
 
 		## CHECKING COMBINATIONS
-		K = len(equations[0][0])
 		t = K
 		chosen_equations = equations[:K]
 		found = False
