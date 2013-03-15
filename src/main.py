@@ -47,7 +47,7 @@ def compareNoisyMAX():
 		(('Benign', 'BadDiet', 'Good'), 0.63),
 		(('Benign', 'BadDiet', 'Bad'), 0.22),
 	)
-	b1 = BayesianDataSet("../data/MAX/Network20k.txt")
+	b1 = BayesianDataSet("../data/MAX/CancerMAX5k.txt")
 	print b1
 	b1.addChildNode(4,'No', [0,1,2,3], ['False', 'False', 'False', 'Medium'])
 	print "COUNTED"

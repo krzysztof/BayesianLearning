@@ -1,0 +1,129 @@
+\documentclass{article}
+\usepackage{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{placeins}
+\usepackage{hyperref}
+\usepackage{amssymb,amsmath}
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{polski}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{longtable}
+%\title{TYTUL \\ TYTUL2 \\ }
+%\author{\textsc{Krzysztof Nowak}}
+%\author{\textsc{Krzysztof Nowak} \\ \textsc{Anna Warpechowska}}
+
+\begin{document}
+%\maketitle
+%\begin{tabular}{lr}
+%Prowadzący zajęcia: dr inż. Magdalena Topczewska
+%\end{tabular}
+
+\setlength\parindent{0pt} % Removes all indentation from paragraphs
+
+\renewcommand{\labelenumi}{\alph{enumi}.} % Make numbering in the enumerate environment by letter rather than number (e.g. section 6)
+
+%----------------------------------------------------------------------------------------
+%	Przyklady
+%----------------------------------------------------------------------------------------
+
+\section{Calculating LEAK}
+
+As it was shown in previous chapter, calculating LEAK naively may lead to problems with certain prior probabilities that favor high probability of parent being in state true.
+\begin{longtable}{|l||p{2cm}|}
+	\hline
+	state & p \\\hline\hline
+	true & 0.9 \\\hline
+	false & 0.1 \\\hline
+\end{longtable}
+
+Such circumstances tend to produce data with few records modeling leak parameter directly.
+Since leak parameter can lead to errors in calculating parameters further.
+
+\begin{verbatim}
+1 | 0 0 0 |   10 | 0.0010%
+2 | 1 0 0 |   86 | 0.0086%
+3 | 0 1 0 |   90 | 0.0090%
+4 | 0 0 1 |  108 | 0.0108%
+5 | 1 0 1 |  801 | 0.0801%
+6 | 1 1 0 |  813 | 0.0813%
+7 | 0 1 1 |  844 | 0.0844%
+8 | 1 1 1 | 7248 | 0.7248%
+\end{verbatim}
+
+As we can see above, eliciting leak directly requires us to rely on 10 records (out of 10.000).
+This carries considerable error in further calculations.
+
+We can calculate leak parameter, by expressing leak as another variable that's always present.
+
+\begin{verbatim}
+1 | 0 0 0 (1) |   10 | 0.0010%
+2 | 1 0 0 (1) |   86 | 0.0086%
+3 | 0 1 0 (1) |   90 | 0.0090%
+(...)
+\end{verbatim}
+
+We can solve the leak parameter by choosing a subset of the data file that satisfies the following condition:
+
+\begin{description}
+	\item[Condition for leak solvability] \hfill \\
+        There exist a linear combination of vectors that produces a vector $[0 0 .. 0 (1)]$.
+\end{description}
+
+Since we don't care about solving parameters other than leak yet, the determinant of such matrix does not have to meet Rouche-Capelli conditions for unique solution.
+If we choose vectors 6, 7 and 8 for our equation set, we can easily solve it for leak.
+\begin{verbatim}
+6 | 1 1 0 (1)|  813 | 0.0813%
+7 | 0 1 1 (1)|  844 | 0.0844%
+8 | 1 1 1 (1)| 7248 | 0.7248%
+\end{verbatim}
+
+\begin{equation}
+    \begin{pmatrix}
+        1 & 1 & 0 & 1 \\
+        0 & 1 & 1 & 1 \\
+        1 & 1 & 1 & 1
+    \end{pmatrix} 
+\end{equation}
+
+\begin{description}
+	\item[Opis boldem] \hfill \\
+	Opis ponizej
+\end{description}
+
+\begin{longtable}{|l|l||p{2cm}|}
+	\hline
+	A & B & C\\\hline\hline
+	0 & 1 & 4\\\hline
+	a & b & e\\\hline
+\end{longtable}
+
+%\begin{figure}[h!]
+
+%  \centering
+%  \includegraphics[width=\textwidth]{knn.png}
+%  \caption{OPIS}
+%  \label{fig:knn}
+%\end{figure}
+\end{document}
+
+\begin{description}
+	\item[Opis boldem] \hfill \\
+	Opis ponizej
+\end{description}
+
+\begin{longtable}{|l|l||p{2cm}|}
+	\hline
+	A & B & C\\\hline\hline
+	0 & 1 & 4\\\hline
+	a & b & e\\\hline
+\end{longtable}
+
+%\begin{figure}[h!]
+
+%  \centering
+%  \includegraphics[width=\textwidth]{knn.png}
+%  \caption{OPIS}
+%  \label{fig:knn}
+%\end{figure}
+\end{document}

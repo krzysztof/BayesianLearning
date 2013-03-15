@@ -1,0 +1,243 @@
+\documentclass{article}
+\usepackage{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{placeins}
+\usepackage{hyperref}
+\usepackage{amssymb,amsmath}
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{tikz}
+\usepackage{color}
+\usepackage{polski}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{longtable}
+\title{Testing record distribution}
+\author{\textsc{Krzysztof Nowak}}
+%\author{\textsc{Krzysztof Nowak} \\ \textsc{Anna Warpechowska}}
+
+\begin{document}
+%\maketitle
+\begin{tabular}{lr}
+\end{tabular}
+
+\setlength\parindent{0pt} % Removes all indentation from paragraphs
+
+\renewcommand{\labelenumi}{\alph{enumi}.} % Make numbering in the enumerate environment by letter rather than number (e.g. section 6)
+
+%----------------------------------------------------------------------------------------
+%	Przyklady
+%----------------------------------------------------------------------------------------
+
+\section{Network}
+
+\definecolor{cp_graphred}{RGB}{220,42,42}
+\begin{figure}[h!]
+  \begin{center}
+    \begin{tikzpicture}[scale=2]
+    \tikzstyle{vertex}=[draw,text=white,auto=left,circle,fill=cp_graphred,minimum size=25pt]
+    \tikzstyle{end}=[draw,text=white,auto=left,circle,fill=black,minimum size=14pt]
+    \tikzstyle{end2}=[draw,auto=left,circle,minimum size=20pt]
+    \tikzstyle{start}=[draw,text=white,auto=left,circle,fill=black,minimum size=14pt]
+  
+    \node[vertex] (a) at (0, -1)  {p1};
+    \node[vertex] (b) at (1, -1)  {p2};
+    \node[vertex] (c) at (2, -1) {p3};
+    \node[vertex] (d) at (1, -2) {c1};
+  
+    \foreach \from/\to in {a/d,b/d,c/d}
+    \draw[->, >=latex] (\from) -- (\to);
+
+    \end{tikzpicture}
+    \caption{Test network}
+    \label{fig:transaction_states}
+    \end{center}
+\end{figure}
+
+All nodes are binary.
+
+\subsection{Test 1}
+All parents at
+\begin{longtable}{|l||p{2cm}|}
+	\hline
+	state & p \\\hline\hline
+	true & 0.5 \\\hline
+	false & 0.5 \\\hline
+\end{longtable}
+
+Results (10k sample):
+\begin{verbatim}
+0 0 0 0 |  611 | 0.0611%
+0 0 0 1 |  658 | 0.0658%
+0 0 1 0 |  656 | 0.0656%
+0 0 1 1 |  616 | 0.0616%
+0 1 0 0 |  615 | 0.0615%
+0 1 0 1 |  599 | 0.0599%
+0 1 1 0 |  676 | 0.0676%
+0 1 1 1 |  625 | 0.0625%
+1 0 0 0 |  623 | 0.0623%
+1 0 0 1 |  650 | 0.0650%
+1 0 1 0 |  621 | 0.0621%
+1 0 1 1 |  653 | 0.0653%
+1 1 0 0 |  583 | 0.0583%
+1 1 0 1 |  606 | 0.0606%
+1 1 1 0 |  608 | 0.0608%
+1 1 1 1 |  600 | 0.0600%
+\end{verbatim}
+
+\subsection{Test 2}
+Every parent at:
+\begin{longtable}{|l||p{2cm}|}
+	\hline
+	state & p \\\hline\hline
+	true & 0.1 \\\hline
+	false & 0.9 \\\hline
+\end{longtable}
+
+Results (10k sample):
+\begin{verbatim}
+0 0 0 0 | 3667 | 0.3667%
+0 0 0 1 | 3577 | 0.3577%
+0 0 1 0 |  404 | 0.0404%
+0 0 1 1 |  422 | 0.0422%
+0 1 0 0 |  406 | 0.0406%
+0 1 0 1 |  405 | 0.0405%
+0 1 1 0 |   45 | 0.0045%
+0 1 1 1 |   35 | 0.0035%
+1 0 0 0 |  436 | 0.0436%
+1 0 0 1 |  410 | 0.0410%
+1 0 1 0 |   37 | 0.0037%
+1 0 1 1 |   49 | 0.0049%
+1 1 0 0 |   49 | 0.0049%
+1 1 0 1 |   47 | 0.0047%
+1 1 1 0 |    6 | 0.0006%
+1 1 1 1 |    5 | 0.0005%
+\end{verbatim}
+
+\subsection{Test 3}
+Every parent at:
+\begin{figure}
+\begin{longtable}{|l||p{2cm}|}
+	\hline
+	state & p \\\hline\hline
+	true & 0.9 \\\hline
+	false & 0.1 \\\hline
+\end{longtable}
+\end{figure}
+
+Results (10k sample):
+\begin{verbatim}
+0 0 0 0 |    8 | 0.0008%
+0 0 0 1 |    4 | 0.0004%
+0 0 1 0 |   48 | 0.0048%
+0 0 1 1 |   42 | 0.0042%
+0 1 0 0 |   46 | 0.0046%
+0 1 0 1 |   38 | 0.0038%
+0 1 1 0 |  365 | 0.0365%
+0 1 1 1 |  395 | 0.0395%
+1 0 0 0 |   46 | 0.0046%
+1 0 0 1 |   32 | 0.0032%
+1 0 1 0 |  376 | 0.0376%
+1 0 1 1 |  424 | 0.0424%
+1 1 0 0 |  390 | 0.0390%
+1 1 0 1 |  390 | 0.0390%
+1 1 1 0 | 3722 | 0.3722%
+1 1 1 1 | 3674 | 0.3674%
+\end{verbatim}
+
+\begin{itemize}
+	\item Leak parameter in Test 3 comes with a high error (0.667\% vs ideal 0.5\%), which is later taken into exponent.
+	\item Leak denominator (p('0 0 0 0') + p('0 0 0 1')) equals to $(p_{1,false})\dot (p_{2,false}) \dot (p_{3,false})$ \% of all records
+\end{itemize}
+
+\begin{longtable}{|l|l|l||p{2cm}|}
+	\hline
+	p1 false & p2 false & p3 false & leak denominator (\% of all records) \\\hline\hline
+	0.9 & 0.9 & 0.9 & 0.729 \\\hline
+	0.7 & 0.8 & 0.9 & 0.504\\\hline 
+	0.7 & 0.7 & 0.7 & 0.342\\\hline 
+	0.5 & 0.5 & 0.5 & 0.125\\\hline 
+	0.5 & 0.5 & 0.1 & 0.025\\\hline 
+	0.2 & 0.2 & 0.2 & 0.008\\\hline
+	0.1 & 0.1 & 0.1 & 0.001\\\hline
+	0.3 & 0.01 & 0.3 & 0.0009\\\hline
+	0.7 & 0.01 & 0.5 & 0.0035 \\\hline
+\end{longtable}
+
+\begin{itemize}
+	\item It gets worse as the number of parents increases
+\end{itemize}
+
+\begin{longtable}{|l|l|l||p{2cm}|}
+	\hline
+	number of parents & false prob for each parent & leak denominator (\% of all records) \\\hline\hline
+	
+	7 & 0.8 & 0.209 \\\hline
+	7 & 0.7 & 0.082 \\\hline
+	7 & 0.6 & 0.028 \\\hline
+	7 & 0.5 & 0.008 \\\hline
+	7 & 0.4 & 0.0016 \\\hline
+	9 & 0.8 & 0.1342 \\\hline
+	9 & 0.7 & 0.0403 \\\hline
+	9 & 0.6 & 0.01 \\\hline
+	9 & 0.5 & 0.001 \\\hline
+	15 & 0.6 & 0.0004 \\\hline
+	17 & 0.6 & 0.0001 \\\hline
+	17 & 0.6 & 0.0001 \\\hline
+	20 & 0.75 & 0.003 \\\hline
+\end{longtable}
+
+
+
+\subsection{Different leak errors for prior prob. as in Test 3 (10K sample)}
+\begin{longtable}{|l|l||p{2cm}|}
+	\hline
+	test & val &error \\\hline\hline
+	1 & 0.4 & 0.1 \\\hline
+	2 & 0.4 & 0.1 \\\hline
+	3 & 0.4 & 0.1 \\\hline
+	4 & 0.4 & 0.1 \\\hline
+	5 & 0.8 & 0.3 \\\hline
+	6 & 0.667 & 0.167 \\\hline
+	7 & 0.5 & 0.0 \\\hline
+	8 & 0.333 & 0.167 \\\hline
+	9 & 0.166 & 0.334 \\\hline
+\end{longtable}
+
+\subsection{Different leak errors for prior prob. as in Test 3 (2K sample)}
+\begin{longtable}{|l|l||p{2cm}|}
+	\hline
+	test & val & error \\\hline\hline
+	1 & 0.0* & 0.5 \\\hline
+	2 & 0.667 & 0.167 \\\hline
+	3 & 0.0* & 0.5 \\\hline
+	4 & 0.0* & 0.5 \\\hline
+	5 & 0.0* & 0.5\\\hline
+	6 & 0.0* & 0.5\\\hline
+	7 & 0.0* & 0.5 \\\hline
+\end{longtable}
+* - division by zero or 1/1
+
+\subsection{Different leak errors for prior prob. as in Test 3 (1K sample)}
+\begin{longtable}{|l|l||p{2cm}|}
+	\hline
+	test & val & error \\\hline\hline
+	1 & 0.5 & 0.0 \\\hline
+	2 & 0.0* & 0.5 \\\hline
+	3 & 0.33.. & 0.166.. \\\hline
+	4 & 1.0* & 0.5\\\hline
+	5 & 0.666.. & 0.1666\\\hline
+\end{longtable}
+* - division by zero or 1/1
+
+\begin{itemize}
+	\item Denominator for LEAK in previous networks consisted of ~25\% of whole record file.
+\end{itemize}
+
+%\begin{figure}[h!]
+
+%  \centering
+%  \includegraphics[width=\textwidth]{knn.png}
+%  \caption{OPIS}
+%  \label{fig:knn}
+%\end{figure}
+\end{document}

@@ -1,0 +1,29 @@
+\frametitle {Usprawnienie wyliczania parametrów z danych.}
+\begingroup
+\fontsize{5pt}{5pt}
+\setstretch{0.2}
+Kombinacja, Ilość reprezentantów (mianownik), stosunek procentowy
+\begin{Verbatim}[frame=single, numbers=left, numbersep=2pt]
+False False False True  | 28330  | 0.2833%
+False False False False | 23400  | 0.2340%
+True False False True   | 14192  | 0.1419%
+True False False False  | 11297  | 0.1130%
+False True False True   | 8162   | 0.0816%
+False True False False  | 6589   | 0.0659%
+True True False True    | 3791   | 0.0379%
+True True False False   | 3230   | 0.0323%
+False False True True   | 264    | 0.0026%
+False False True False  | 253    | 0.0025%
+True False True True    | 134    | 0.0013%
+True False True False   | 122    | 0.0012%
+False True True True    | 86     | 0.0009%
+False True True False   | 79     | 0.0008%
+True True True False    | 38     | 0.0004%
+True True True True     | 33     | 0.0003%
+\end{Verbatim}
+\endgroup
+\vspace{-1ex}
+Możemy użyć rekordów 1, 4, 6 oraz 10 do uzupełnienia tabeli Noisy-OR.
+\begin{itemize}
+    \item Czy jest to optymalny sposób pozyskania parametrów?
+\end{itemize}
