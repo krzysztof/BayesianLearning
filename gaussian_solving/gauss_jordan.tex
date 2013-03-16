@@ -318,3 +318,174 @@ At this point we can pick a solution with a higher fitness value, or take weight
 \end{matrix}
 \end{equation}
 
+Let's look at the example of an equation set with multiple zero vectors:
+
+\begin{equation}
+\begin{bmatrix}[cccc|c]
+    1 & 1 & 0 & 1 & b_1 \\
+    1 & 1 & 0 & 0 & b_2 \\
+    0 & 1 & 1 & 0 & b_3 \\ 
+    0 & 0 & 1 & 0 & b_4 \\ 
+    1 & 0 & 0 & 0 & b_5 \\ 
+    1 & 0 & 0 & 1 & b_6 \\ 
+\end{bmatrix}
+\end{equation}
+
+This equation set is of course overconstrained.
+We can expect to obtain at least two zero vectors after the Gauss-Jordan elimination steps.
+
+\begin{equation}
+\begin{bmatrix}[cccc|c]
+    1 & 1 & 0 & 1 & b_1 \\
+    1 & 1 & 0 & 0 & b_2 \\
+    0 & 1 & 1 & 0 & b_3 \\ 
+    0 & 0 & 1 & 0 & b_4 \\ 
+    1 & 0 & 0 & 0 & b_5 \\ 
+    1 & 0 & 0 & 1 & b_6 \\ 
+\end{bmatrix} \sim
+\begin{bmatrix}[cccc|c]
+    1 & 0 & 0 & 0 & b_2 - b_3 + b_4 \\
+    0 & 0 & 0 & 1 & b_1 - b_2 \\
+    0 & 1 & 0 & 0 & b_3 - b_4 \\ 
+    0 & 0 & 1 & 0 & b_4 \\ 
+    0 & 0 & 0 & 0 & -b_2 + b_3 - b_4 + b_5 \\ 
+    0 & 0 & 0 & 0 & -b_1 + b_3 - b_4 + b_6 \\ 
+\end{bmatrix}
+\begin{matrix}
+v_1 \\ v_2 \\ v_3 \\ v_4 \\ v_5 \\ v_6
+\end{matrix}
+\label{eq:gauss_jordan1}
+\end{equation}
+
+Let's mark each vector in a reduced row echelon form ($v_1 \ldots v_6$). As we had shown previously, we can use zero vectors to obtain different solutions to parameters $x_1 \ldots x_4$, for example:
+
+\begin{equation}
+\begin{matrix}[cccc|c|c]
+    & & & & \mbox{combination} & \mbox{value} \\
+    \hline
+    [1 & 0 & 0 & 0]_1 & v_1 & b_2-b_3+b_4 \\
+    [1 & 0 & 0 & 0]_2 & v_1+v_5 & b_5 \\
+    [1 & 0 & 0 & 0]_3 & v_1+v_6 & -b_1 + b_2 + b_6 \\
+    \hline
+    [0 & 1 & 0 & 0]_1 & v_3 & b_3 - b_4 \\
+    [0 & 1 & 0 & 0]_2 & v_3 - v_5 & b_2 - b_5 \\
+    [0 & 1 & 0 & 0]_3 & v_3 - v_6 & b_1 - b_6 \\
+    \hline
+    & & \cdots & & \cdots & \cdots \\
+    \hline
+    [0 & 0 & 0 & 1]_1 & v_2 & b_1 - b_2 \\
+    [0 & 0 & 0 & 1]_2 & \textcolor{red}{v_2  + v_6 - v_5}& b_6 - b_5 \\
+    \hline
+    & & \cdots & & \cdots & \cdots \\
+\end{matrix}
+\end{equation}
+
+Notice that second solution for $x_4$ (in red above) requires two zero vectors to find an efficient solution.
+
+We would like to propose a conjecture describing relationship of possible solutions with zero vectors in reduced row echelon form matrix.
+\begin{description}
+	\item[Zero-vector conjecture] \hfill \\
+        Every possible solution for given parameter can be obtained as a linear combination of a solution vector from Gauss-Jordan elimination, and the zero vectors, that is
+    \begin{equation}
+        \forall_{s \in S} \displaystyle\exists_{a \in V} \; s = [1,a_1,a_2,\ldots,a_n]\times[s_0,z_1,z_2,\ldots,z_n]=s_0 + a_1 \cdot z_1 + a_2 \cdot z_2 +\cdots+a_n \cdot z_n
+    \end{equation}
+    where $s \in S$ is a solution vector $s$ for given parameter from a solution space $S$ \\
+    $a \in V$ is a vector of coefficients from a vector space $V$, over a field $\mathbb{R}$ \\
+    $s_0$ is a first solution (also a vector over a field $\mathbb{R}$) for given parameter, as obtained from Gauss-Jordan elimination \\
+    and $z_i$ is the $i$-th zero vector obtained from Gauss-Jordan elimination ($i \in 1\ldots n$). \\
+    $n$ is the number of zero vectors in reduced row echelon form.
+	\item[Proof] \hfill \\
+    If the equation set is determined, each parameter has a unique solution. Since in that case there are no zero vectors, $n=0 => s = [1] \times [s_0] = s_0$.\\
+    Similar case would emerge when the equation set is strictly underdetermined (not every parameter has a unique solution, but no zero vectors appear in reduced row echelon form either).
+    Third case would be equation sets with over-constrainments, which are of our interest here since they produce zero vectors after Gauss-Jordan elimination.
+
+    First, let's define two terms we will later use:
+
+    \begin{description}
+    	\item[Linear combination of equation set] \hfill \\
+            Linear combination of equation set can be interpreted as a function
+            \begin{equation}
+                f: \mathbb{M}_{m \times n} \to \mathbb{M}_{m \times n}
+            \end{equation}
+
+            where $\mathbb{M}_{m \times n}$ is a space of matrices of size $m \times n$.
+
+            Additionally every such function $f$ is equivalent to some matrix $F$, that is
+            \begin{equation}
+                f(A_0) = F \cdot A_0
+            \end{equation}
+
+            Example: Equation~\ref{eq:gauss_jordan1} could also be written as
+            \begin{equation}
+            \begin{bmatrix}
+                0 & 1 & -1 & 1 & 0 & 0 \\
+                1 & -1 & 0 & 0 & 0 & 0 \\
+                0 & 0 & 1 & -1 & 0 & 0 \\ 
+                0 & 0 & 0 & 1 & 0 & 0 \\ 
+                0 & -1 & 1 & -1 & 1 & 0 \\ 
+                -1 & 0 & 1 & -1 & 0 & 1 \\ 
+            \end{bmatrix} \cdot
+            \begin{bmatrix}[cccc|c]
+                1 & 1 & 0 & 1 & b_1 \\
+                1 & 1 & 0 & 0 & b_2 \\
+                0 & 1 & 1 & 0 & b_3 \\ 
+                0 & 0 & 1 & 0 & b_4 \\ 
+                1 & 0 & 0 & 0 & b_5 \\ 
+                1 & 0 & 0 & 1 & b_6 \\ 
+            \end{bmatrix} =
+            \begin{bmatrix}[cccc|c]
+                1 & 0 & 0 & 0 & b_2 - b_3 + b_4 \\
+                0 & 0 & 0 & 1 & b_1 - b_2 \\
+                0 & 1 & 0 & 0 & b_3 - b_4 \\ 
+                0 & 0 & 1 & 0 & b_4 \\ 
+                0 & 0 & 0 & 0 & -b_2 + b_3 - b_4 + b_5 \\ 
+                0 & 0 & 0 & 0 & -b_1 + b_3 - b_4 + b_6 \\ 
+            \end{bmatrix}
+            \begin{matrix}
+            v_1 \\ v_2 \\ v_3 \\ v_4 \\ v_5 \\ v_6
+            \end{matrix}
+            \label{eq:gauss_jordan2}
+            \end{equation}
+            in which case the leftmost matrix would be our linear combination of Gauss-Jordan elimination steps.
+
+        \item[Solution vector] \hfill \\
+            Solution vector is a single row in a matrix (usually obtained by linear combination of equation set), directly solving given parameter $k$ (vector $[0 \;\ldots\;0\;1\;0\; \ldots 0 ]$ with $1$ at the $k$-th place).
+            Example:
+            Row $v_2$ in equation~\ref{eq:gauss_jordan2} unambiguously gives solution to parameter $x_4$, thus vector $[0\;0\;0\;1\;|b_1 - b_2]$ is the solution vector of $x_4$.
+    \end{description}
+
+    We will prove now the conjecture in question. 
+    Let $\boldsymbol{A}$ be the original equation set, and $\boldsymbol{B}$ - the equation set after Gauss-Jordan elimination (reduced row echelon form).
+    Let's say that given parameter $x_m$ can be calculated using two different linear combinations of vectors in the original equation.
+    Let's call these $L_0$ and $L_k$, where $L_0$ is linear combination equivalent to Gauss-Jordan elimination ($\boldsymbol{B} = L_0 \cdot \boldsymbol{A}$).
+    Let's assume that $s_0$ is the solution vector for parameter $x_m$ as obtained from Gauss-Jordan elimination (that is $s_0 \in \boldsymbol{B}$)
+
+    Solution $s_0$ is a vector in in $\boldsymbol{B}$.
+
+    Solution $s_k$ is a vector in $L_k \cdot \boldsymbol{A}$, but it is not a vector $\boldsymbol{B}$ (otherwise we would have linearly dependent non-zero vectors in $\boldsymbol{B}$ which does not happen after Gauss-Jordan elimination steps).
+
+    We can show that $s_k$ can also be obtained as linear combination of vectors form $\boldsymbol{B}$ using only $s_0$ and the zero vectors, by splitting the conjecture into two parts:
+    \begin{enumerate}
+    \item Vector $s_k$ can be obtained as a linear combination of vectors from $\boldsymbol{B}$ \hfill \\
+        Since $L_0$ is determined by Gauss-Jordan elimination, which in turn use only elementary row operations, $L_0$ is an invertible matrix.
+        Thus $L_0^{-1}$ exists.
+        \begin{equation}
+            L_k \cdot L_0^{-1} \cdot \boldsymbol{B} = L_k \cdot L_0^{-1} \cdot L_0 \cdot \boldsymbol{A} = L_k \cdot \boldsymbol{A}
+        \end{equation}
+        Because $s_k$ is a vector in $L_k \cdot \boldsymbol{A}$ then $s_k$ is also a vector in $L_k \cdot L_0^{-1} \cdot \boldsymbol{B}$.
+        In that case we can use a linear combination $L_k \cdot L_0^{-1}$ to go from solution $s_0$ to $s_k$.
+
+    \item Vector $s_k$ in $L_k \cdot L_0^{-1} \cdot \boldsymbol{A}$ is a linear combination of vectors no other than $s_0$ and the zero vectors in $\boldsymbol{B}$\hfill \\
+        \textcolor{red}{(Quite foggy argument I'm not satisfied with yet)}
+
+        Because $\boldsymbol{B}$ is a reduced row echelon form, it holds the following property: no two non-zero coefficients in reduced row echelon form share the same column or a row.
+        Let's assume that vector $s_k$ is calculated using two non-zero vectors in it's linear combination from $\boldsymbol{B}$ to $L_k \cdot A$.
+        In that case, $s_0$ has to be appear in a linear combination with a non-zero coefficient since no other non-zero vector can produce a $1$ in $m$-th column.
+        Additionally, any linear combination involving any two non-zero vectors from $\boldsymbol{B}$ with both coefficients other than $0$ will produce a vector with at least two parameters other than $0$.
+        Such vector would not be a solution vector, which $s_k$ is. Contradiction.
+        %$\Rightarrow$ coefficients at non-zero vectors other than $s_0$ in $s_k \in L_k \cdot L_0^{-1}$ have to be $0$.
+    \end{enumerate}
+\end{description}
+
+Finding such linear combination is no trivial task.
+The solution space is infinite, and virtually any linear combination of zero vectors can be added to any non-zero vector, giving us an valid solution (although the combination would be very inefficient in most cases)
