@@ -1,0 +1,8 @@
+\contentsline {section}{\numberline {0.1}Solving parameters using Gauss--Jordan elimination}{3}{section.0.1}
+\contentsline {subsection}{\numberline {0.1.1}Example of Gauss--Jordan elimination}{4}{subsection.0.1.1}
+\contentsline {subsection}{\numberline {0.1.2}Properties of zero vectors}{8}{subsection.0.1.2}
+\contentsline {subsection}{\numberline {0.1.3}Modifying systems of equations}{15}{subsection.0.1.3}
+\contentsline {subsection}{\numberline {0.1.4}Eliciting leak parameter}{16}{subsection.0.1.4}
+\contentsline {section}{\numberline {0.2}Different approaches to solving parameters}{16}{section.0.2}
+\@tempskipb \lastskip \vskip -\lastskip \penalty -\@highpenalty \vskip \@tempskipb \vskip 1.0em plus\p@ \@tempdima 1.5em\relax \begingroup \parindent \z@ \rightskip 1.55em\parfillskip -1.55em\unhbox \voidb@x \bfseries \advance \leftskip \@tempdima \hskip -\leftskip Bibliografia\penalty \@M \hfil \penalty \@M \hbox to1.55em{\hss 18}\par \penalty \@highpenalty \endgroup 
+\@tempskipb \lastskip \vskip -\lastskip \penalty -\@highpenalty \vskip \@tempskipb \vskip 1.0em plus\p@ \@tempdima 1.5em\relax \begingroup \parindent \z@ \rightskip 1.55em\parfillskip -1.55em\unhbox \voidb@x \bfseries \advance \leftskip \@tempdima \hskip -\leftskip Spis rysunk\IeC {\'o}w\penalty \@M \hfil \penalty \@M \hbox to1.55em{\hss 19}\par \penalty \@highpenalty \endgroup 

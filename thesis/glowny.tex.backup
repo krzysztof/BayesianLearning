@@ -1,0 +1,77 @@
+\documentclass[oneside,12pt]{wipb}
+
+
+\katedra{Systemów Informacyjnych i Sieci Komputerowych}
+\typpracy{ %magisterska
+           inżynierska
+         }
+\temat{Automatyczna generacja listy \mbox{odtwarzania} plików muzycznych}
+\autor{Marcin Koźniewski}
+\promotor{dr inż. Jacek Grekow}
+\indeks{75804}
+\studia{stacjonarne
+        %niestacjonarne
+       }
+\rokakademicki{2011/2012}
+\profil{%magisterskie jednolite
+        %magisterskie uzupełniające
+        studia I stopnia
+        %studia II stopnia
+}
+\kierunekstudiow{informatyka
+                 %matematyka
+                }
+\specjalnosc{%Inżynieria Oprogramowania
+             %Inżynieria Komputerowa
+             %Systemy Oprogramowania
+             %Metody infnformatyczne w~banknkowości i~finansach
+             %Ochrona systemów informatycznych
+            }
+\zakres{1. Przegląd literatury.\newline
+\mbox{2. Użycie pakietu MARSYAS do ekstrakcji cech opisujących pliki
+muzyczne.}\newline
+3. Implementacja funkcji szukającej podobieństw między plikami.\newline
+4. Napisanie aplikacji automatycznie generującej listę odtwarzania plików audio
+podobnych do wybranego pliku przez użytkownika.
+%1. zakres I \newline 2. zakres II \newline 3. zakres III
+}
+
+\hypersetup{ %wpisy w pdf info
+pdfauthor={Marcin Koźniewski},
+pdftitle={Automatyczna generacja listy odtwarzania plików muzycznych.
+Praca inżynierska},
+pdfsubject={},
+pdfkeywords={Praca dyplomowa},
+pdfpagemode=UseNone,
+linkcolor=black,
+citecolor=black
+} 
+
+\begin{document}
+\maketitle
+\setcounter{page}{3}
+\tableofcontents
+\thispagestyle{empty}
+%\setcounter{page}{0}
+\pagestyle{plain}
+	
+\input{rozdziali.tex} % praca moze byc podzielona na pliki
+\input{rozdzialii.tex}
+
+%\nocite{*} %wszystkie wpisy w bibliografi
+\bibliographystyle{plain} %{latex8} %posortowane wzgledem wystepowania
+\bibliography{bibliografia}
+
+\addtocontents{toc}{\contentsline {chapter}{Bibliografia}{\thepage}{}}
+%\listoftables
+%\addtocontents{toc}{\contentsline {chapter}{Spis tabel}{\thepage}{}}
+\listoffigures
+\addtocontents{toc}{\contentsline {chapter}{Spis rysunków}{\thepage}{}}
+\lstlistoflistings
+\addtocontents{toc}{\contentsline {chapter}{Spis listingów}{\thepage}{}}
+%\listofalgorithms % w zaleznosci od kompilatora i wersji klasy moga wystapic
+%bledy przy kompilacji
+%\addtocontents{toc}{\contentsline {chapter}{Spis algorytmów}{\thepage}{}}
+
+%\biblioteka{tak} % tak/nie
+\end{document}

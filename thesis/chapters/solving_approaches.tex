@@ -1,0 +1,33 @@
+\section{Different approaches to solving parameters}
+Since our method enables us to propose different solutions for each parameter (in cases of overdetermined systems), we can propose few means of choosing the final value for given parameter.
+These can rely on choosing the best solution out of all that are possible, or combining several best choices together.
+\begin{enumerate}
+    \item \textbf{Choose the best candidate for a solution out of $k$ best guesses.}
+
+        We have to remember that in cases of ambiguity for each parameter, there are infinitely many linear combinations of first solution and the zero vectors.
+        If we would like to pick the best solution, we have to restrict our search space to the subset of $k$ best candidates.
+        In order to compare candidates for a solution, we can propose a fitness function that tries to estimate the error associated with each solution.
+        %Ideally, our method would yield the best solution as the initial first solution in reduced row echelon form, which can be achieved if we include the idea behind given fitness function in Gauss-Jordan elimination.
+    \item \textbf{Combine $k$ possible candidates for solution into a final answer}
+        
+        Once we elicit the set of $k$ possible candidates, we can use weighted average to combine them into final result.
+        This will not automatically improve the result, but will average-out the error, which in most cases may result good solutions.
+        This may be especially useful in case where it's difficult to propose a fitness function that describes the error accurately.
+\end{enumerate}
+Since both approaches rely on similar input (fitness function, initial set of $k$ candidates) we'll try to describe it first.
+
+\begin{description}
+    \item[Candidates for the solution]
+
+    As we had shown previously, outcome of Gauss--Jordan elimination is just one of the possible solutions in overdetermined systems of equations.
+\end{description}
+
+\begin{description}
+    \item[Candidates for fitness function] \hfill \\
+    \begin{enumerate}
+        \item \textbf{Relative frequency of each combination in a data file}
+        Intuitively it is clear that the error is inversely proportional to the frequency of given combination within the data file.
+        First good guess for a fitness function could be the frequency with which given equation appears in a data file.
+    \end{enumerate}
+\end{description}
+

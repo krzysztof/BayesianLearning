@@ -550,33 +550,3 @@ Taking logarithm of both sides yields the following system:
 
 Since this gives us a linear equation set, Gauss--Jordan elimination is applicable.
 \subsection{Eliciting leak parameter}
-Leak, when not expressed explicitly in the data file, is represented as a combination of all parent nodes being in the distinguished state.
-\begin{figure}[h!]
-  \begin{center}
-    \begin{tikzpicture}[scale=1.5]
-    \tikzstyle{vertex}=[draw,text=black,auto=left,circle,fill=white,minimum size=25pt]
-    \tikzstyle{blank}=[draw,color=white,text=black,auto=left,circle,fill=white,minimum size=25pt]
-    \node[vertex] (P1) at (1, 0) {$P_1$};
-    \node[vertex] (P2) at (1.8, 0) {$P_2$};
-    \node[vertex] (P3) at (2.6, 0) {$P_3$};
-    \node[blank] (dots) at (3.2, 0) {$\cdots$};
-    \node[vertex] (P4) at (3.8, 0) {$P_n$};
-    \node[vertex] (C) at (2.6, -1) {C};
-  
-    \foreach \from/\to in {P1/C, P2/C, P3/C, P4/C}
-    \draw[->, >=latex] (\from) -- (\to);
-
-    \end{tikzpicture}
-    \caption{Simple BN}
-    \label{graph:bn1}
-    \end{center}
-\end{figure}
-
-Let us assume that prior probability of probability of parents $P_1 \cdots P_n$ being in the distinguished stated is $d_1 \cdots d_n$ respectively.
-In that case, probability of vector describing leak is equal to:
-\begin{equation}
-    \prod_{i=1}^n d_i
-\end{equation}
-
-
-Since such records can be relatively rare in some cases, we can try to calculate it treating leak as one of the explicit parameter.

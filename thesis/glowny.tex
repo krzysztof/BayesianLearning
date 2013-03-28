@@ -1,0 +1,105 @@
+\documentclass[oneside,12pt]{wipb}
+
+\katedra{Informatyki Teoretycznej}
+\typpracy{ %magisterska
+           %inżynierska
+	   licencjacka
+         }
+\temat{Algebra z dzieleniem}
+\autor{Marcin Koźniewski}
+\promotor{dr hab. Piotr Grzeszczuk}
+\indeks{75804}
+\studia{stacjonarne
+        %niestacjonarne
+       }
+\rokakademicki{2011/2012}
+\profil{%magisterskie jednolite
+        %magisterskie uzupełniające
+        studia I stopnia
+        %studia II stopnia
+}
+\kierunekstudiow{%informatyka
+                 matematyka
+                }
+\specjalnosc{%Inżynieria Oprogramowania
+             %Inżynieria Komputerowa
+             %Systemy Oprogramowania
+             %Metody infnformatyczne w~banknkowości i~finansach
+             %Ochrona systemów informatycznych
+	     Matematyczne metody informatyki
+            }
+\zakres{1. Konstrukcja kwaternionów Hamiltona\newline
+\mbox{2. Konstrukcja algebr kwaternionów nad różnymi ciałami}\newline
+\mbox{3. Własności algebr kwaternionów}\newline
+\mbox{4. Twierdzenie Wedderburna o skończonych pierścieniach z
+dzieleniem}\newline
+\mbox{5. Zastosowania algebr kwaternionów}
+%1. zakres I \newline 2. zakres II \newline 3. zakres III
+}
+
+\hypersetup{ %wpisy w pdf info
+pdfauthor={Marcin Koźniewski},
+pdftitle={Algebra z dzieleniem.
+Praca licencjacka},
+pdfsubject={},
+pdfkeywords={Praca dyplomowa},
+pdfpagemode=UseNone,
+linkcolor=black,
+citecolor=black
+} 
+\usepackage{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{placeins}
+\usepackage{hyperref}
+\usepackage{amssymb,amsmath}
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{polski}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wasysym}
+\makeatletter
+\renewcommand*\env@matrix[1][*\c@MaxMatrixCols c]{%
+  \hskip -\arraycolsep
+  \let\@ifnextchar\new@ifnextchar
+  \array{#1}}
+\makeatother
+
+
+
+
+\begin{document}
+
+
+\newtheorem{twierdzenie}{Twierdzenie}[chapter]
+\newtheorem{lemat}[twierdzenie]{Lemat}
+\newtheorem{definicja}{Definicja}[chapter]
+\newtheorem{przyklad}{Przykład}[chapter]
+\newtheorem{wlasnosci}{Własności}[chapter]
+
+\maketitle
+\setcounter{page}{3}
+\tableofcontents
+\thispagestyle{empty}
+%\setcounter{page}{0}
+\pagestyle{plain}
+	
+\input{chapters/solving.tex} % praca moze byc podzielona na pliki
+
+%\nocite{*} %wszystkie wpisy w bibliografi
+\bibliographystyle{unsrt} %{latex8} %posortowane wzgledem wystepowania
+\bibliography{bibliografia}
+
+\addtocontents{toc}{\contentsline {chapter}{Bibliografia}{\thepage}{}}
+%\listoftables
+%\addtocontents{toc}{\contentsline {chapter}{Spis tabel}{\thepage}{}}
+\listoffigures
+\addtocontents{toc}{\contentsline {chapter}{Spis rysunków}{\thepage}{}}
+%\lstlistoflistings
+%\addtocontents{toc}{\contentsline {chapter}{Spis listingów}{\thepage}{}}
+%\listofalgorithms % w zaleznosci od kompilatora i wersji klasy moga wystapic
+%bledy przy kompilacji
+%\addtocontents{toc}{\contentsline {chapter}{Spis algorytmów}{\thepage}{}}
+
+%\biblioteka{tak} % tak/nie
+\end{document}

@@ -1,0 +1,28 @@
+\begin{thebibliography}{1}
+
+\bibitem{zarysoMuzyce}
+{Lissa Z.}
+\newblock {\em {Zarys nauki o muzyce}}.
+\newblock {Polskie Wydawnictwo Muzyczne}, 1966.
+\newblock {Kraków}.
+
+\bibitem{rozdzialQBH_MFCC}
+{Niewiadomy D., Pelikant A.}
+\newblock {\em {Bazy danych: Rozwój metod i technologii}}, chapter
+  {Klasyfikator podobieństwa w zapytaniach QBH oparty o współczynniki MFCC},
+  pages 503--510.
+\newblock WŁK, 2008.
+
+\bibitem{magisterska}
+{Schnitzer D.}
+\newblock {High-Performance Music Similarity Computation and Automatic Playlist
+  Generation}.
+\newblock Master's thesis, {Johannes Kepler Universität Linz}, 2007.
+
+\bibitem{Gaussa}
+{Radhakrishna Rao, C.}
+\newblock {\em {Modele liniowe statystyki matematycznej}}.
+\newblock {Polskie Wydawnictwo Naukowe}, 1982.
+\newblock {Warszawa}.
+
+\end{thebibliography}
