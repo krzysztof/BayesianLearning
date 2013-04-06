@@ -348,6 +348,12 @@ def binarize(data_counter):
 
     for k, v in data_counter.iteritems():
         new_key = tuple([binname(name) for name in k])
+
+        #FIXING 1.0 and 0.0
+        #if v["True"] == 0:
+        #    v["True"] += 1
+        #if v["False"] == 0:
+        #    v["False"] += 1
         denom = v["True"] + v["False"]
         binary_data[new_key] = (v["True"] / float(denom), denom)
     return binary_data
@@ -366,40 +372,109 @@ def mainGJ():
     data = read_data(sys.argv[1], ' ')
     c = Counter(data['data'])
     new_counter = match_by_column(c, 4)
+    for k,v in new_counter.iteritems():
+        print k,v.items(), v['True']/float(v['False']+ v['True'])
+    for i in range(5):
+        priora = [d for d in data['data'] if d[i] =='True']
+        print i,len(priora), len(data['data']), float(len(priora))/len(data['data'])
+   #return
 
     binary_data = binarize(new_counter)
 
     items = sorted(binary_data.items(), key = lambda x: x[1][1], reverse=True)
 
     def leak_exponent(k):
-        return (-sum(k)+1,)
-        #return (1,)
+        #return (-sum(k)+1,)
+        return (1,)
         #return ()
 
     log_base = 2
 
     A_vect = [leak_exponent(k) + k for k, v in items if v[0] not in(1.0, 0.0)]
     A = np.array(A_vect) * Fraction(1,1)
-
     b_vect = [ v[0] for k, v in items if v[0] not in (1.0, 0.0) ]
     b_vect = [ log(1.0 - b, log_base) for b in b_vect]
     b_cnt = [ v[1] for k, v in items if v[0] not in (1.0, 0.0) ]
 
-    for i in xrange(A.shape[0]):
-        print A_vect[i], b_vect[i], b_cnt[i]
+    #A_vect = [leak_exponent(k) + k for k, v in items]
+    #A = np.array(A_vect) * Fraction(1,1)
+    #b_vect = [ v[0] for k, v in items]
+    #b_vect = [ log(1.0 - b, log_base) for b in b_vect]
+    #b_cnt = [ v[1] for k, v in items ]
 
-    b = np.array([sp.Symbol('b%d'%(i), real=True) for i in range(0, A.shape[0])])
+
+
+    for i in xrange(A.shape[0]):
+        print "b%d"%i, A_vect[i], b_vect[i], b_cnt[i]
+
+    
+    #b = np.array([sp.Symbol('b%d'%(i), real=True) for i in range(0, A.shape[0])])
+    b = np.array(sp.symbols('b0:%d' % A.shape[0]))
     subs = dict(zip(b,b_vect))
+    subs_cnt = dict(zip(b,b_cnt))
     #for i in sorted([ (int(str(k)[1:]),v) for k, v in subs.items()], key=lambda x:x[0]):
         #print i
     
     A2, b2 = GaussJordanElimination(A, b)
     b3 = [1.0 - float(log_base**b.evalf(subs=subs)) for b in b2]
+
     subs_str = tuple([(str(k), v) for k, v in subs.iteritems()]) + tuple([("r%d"%i, b2[i]) for i in range(len(b2)) ])
     subs_str = dict(subs_str)
+
     print augment([A2, b2, b3])
+
+    nonzero_i = (i for i in range(A2.shape[0]) if any(j!=0 for j in A2[i]))
+    zero_i = (i for i in range(A2.shape[0]) if all(j==0 for j in A2[i]))
+    nonzero_v = list((A2[i], b2[i]) for i in nonzero_i)
+    zero_v = list((A2[i], b2[i]) for i in zero_i)
+
+    def product(l):
+        return reduce(lambda x,y:x*y, l)
+
+    def _min_fitness(b_val, b_subs_cnt):
+        #return b_val.args
+        #print b_subs_cnt
+        total = sum(b_subs_cnt.values())
+        coeff = [(b.args if b.args else (1, b)) for b in (b_val.args if not type(b_val)==sp.Symbol else [b_val])]
+        min_c = min(b_subs_cnt[c[1]] for c in coeff)
+        return min_c/float(total)
+
+    def _avg_fitness(b_val, b_subs_cnt):
+        total = sum(b_subs_cnt.values())
+        coeff = [(b.args if b.args else (1, b)) for b in (b_val.args if not type(b_val)==sp.Symbol else [b_val])]
+        #print coeff
+        return sum(b_subs_cnt[s[1]]/float(total) for s in coeff)/ float(sum(abs(s) for s,_ in coeff))
+        #return sum(abs(s[0])*(b_subs_cnt[s[1]]/float(total)) for s in coeff) / sum(b_subs_cnt[s[1]]/float(total) for s in coeff)
+        #return 1
+    def _max_count_fitness(b_val, b_subs_cnt):
+        total = sum(b_subs_cnt.values())
+        coeff = [(b.args if b.args else (1, b)) for b in (b_val.args if not type(b_val)==sp.Symbol else [b_val])]
+        return sum(b_subs_cnt[s[1]]/abs(s[0]) for s in coeff) / float(total)
+        
+    #fitness = _min_fitness
+    fitness = _avg_fitness
+    #BELOW: poor fitness!
+    #fitness = _max_count_fitness
+
+    solutions = []
+    for i in nonzero_v:
+        for zv in ([(0,0)] + zero_v):
+            for coeff in [2, 1,-1, -2]:
+                expr = (i[1] + coeff*zv[1])
+                fit = fitness(expr, subs_cnt)
+                #print i[0], " [",coeff,"]", zv[0], "expr:",expr, "value:",float(1.0 - log_base**expr.evalf(subs=subs)), "fitness:", fit
+                solutions.append((i[0],'V' if type(zv[0])!=int else '0', coeff, zv[1],"EXPR:", expr, float(1.0 - log_base ** expr.evalf(subs=subs)), fit))
+    solutions = [s for s in sorted(solutions, key= lambda x: x[-1], reverse=True) if s[0][0] == 1]
+
+    for s in solutions:
+        print s
+
+    suma = sum(s[-1]*s[-2] for s in solutions)
+    print suma / sum(s[-1] for s in solutions)
+    
     inp = 0
     while True:
+        break #FIXME TO ENTER TYPE MODE
         inp = raw_input()
         if inp =='0':
             break

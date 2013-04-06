@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.6.26)  28 MAR 2013 20:03
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.6.26)  3 APR 2013 12:15
 entering extended mode
  %&-line parsing enabled.
 **main.tex
@@ -737,23 +737,47 @@ Package: wasysym 2003/10/30 v2.0 Wasy-2 symbol support package
 \symwasy=\mathgroup6
 LaTeX Font Info:    Overwriting symbol font `wasy' in version `bold'
 (Font)                  U/wasy/m/n --> U/wasy/b/n on input line 90.
+)
+(/usr/share/texmf-texlive/tex/latex/caption/caption.sty
+Package: caption 2009/10/09 v3.1k Customizing captions (AR)
+
+(/usr/share/texmf-texlive/tex/latex/caption/caption3.sty
+Package: caption3 2009/10/09 v3.1k caption3 kernel (AR)
+\captionmargin=\dimen165
+\captionmargin@=\dimen166
+\captionwidth=\dimen167
+\caption@indent=\dimen168
+\caption@parindent=\dimen169
+\caption@hangindent=\dimen170
+)
+\c@ContinuedFloat=\count134
+Package caption Info: hyperref package is loaded.
+Package caption Info: longtable package is loaded.
+
+(/usr/share/texmf-texlive/tex/latex/caption/ltcaption.sty
+Package: ltcaption 2008/03/28 v1.2 longtable captions (AR)
+))
+(/usr/share/texmf-texlive/tex/latex/caption/subcaption.sty
+Package: subcaption 2008/08/31 v1.0b Adding subcaptions (AR)
+\c@subfigure=\count135
+\c@subtable=\count136
 ) (./main.aux)
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 24.
-LaTeX Font Info:    ... okay on input line 24.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 24.
-LaTeX Font Info:    ... okay on input line 24.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 24.
-LaTeX Font Info:    ... okay on input line 24.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 24.
-LaTeX Font Info:    ... okay on input line 24.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 24.
-LaTeX Font Info:    ... okay on input line 24.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 24.
-LaTeX Font Info:    ... okay on input line 24.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 24.
-LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
 
 *geometry auto-detecting driver*
 *geometry detected driver: pdftex*
@@ -796,17 +820,17 @@ driver: pdftex
 
 (1in=72.27pt, 1cm=28.45pt)
 -----------------------
-Package hyperref Info: Link coloring OFF on input line 24.
+Package hyperref Info: Link coloring OFF on input line 32.
 (/usr/share/texmf-texlive/tex/latex/hyperref/nameref.sty
 Package: nameref 2007/05/29 v2.31 Cross-referencing by name of section
 
 (/usr/share/texmf-texlive/tex/latex/oberdiek/refcount.sty
 Package: refcount 2008/08/11 v3.1 Data extraction from references (HO)
 )
-\c@section@level=\count134
+\c@section@level=\count137
 )
-LaTeX Info: Redefining \ref on input line 24.
-LaTeX Info: Redefining \pageref on input line 24.
+LaTeX Info: Redefining \ref on input line 32.
+LaTeX Info: Redefining \pageref on input line 32.
  (./main.out)
 (./main.out)
 \@outlinefile=\write4
@@ -815,82 +839,92 @@ LaTeX Info: Redefining \pageref on input line 24.
 \AtBeginShipoutBox=\box41
  (/usr/share/texmf-texlive/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count135
-\scratchdimen=\dimen165
+\scratchcounter=\count138
+\scratchdimen=\dimen171
 \scratchbox=\box42
-\nofMPsegments=\count136
-\nofMParguments=\count137
+\nofMPsegments=\count139
+\nofMParguments=\count140
 \everyMPshowfont=\toks35
-\MPscratchCnt=\count138
-\MPscratchDim=\dimen166
-\MPnumerator=\count139
+\MPscratchCnt=\count141
+\MPscratchDim=\dimen172
+\MPnumerator=\count142
 \everyMPtoPDFconversion=\toks36
-) ABD: EveryShipout initializing macros (./gauss_jordan.tex
-LaTeX Font Info:    Try loading font information for U+msa on input line 4.
+) ABD: EveryShipout initializing macros
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: End \AtBeginDocument code.
+ (./gauss_jordan.tex
+LaTeX Font Info:    Try loading font information for U+msa on input line 5.
 
 (/usr/share/texmf-texlive/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2009/06/22 v3.00 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 4.
+LaTeX Font Info:    Try loading font information for U+msb on input line 5.
 
 (/usr/share/texmf-texlive/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2009/06/22 v3.00 AMS symbols B
 )
-LaTeX Font Info:    Try loading font information for U+wasy on input line 4.
+LaTeX Font Info:    Try loading font information for U+wasy on input line 5.
 
 (/usr/share/texmf-texlive/tex/latex/wasysym/uwasy.fd
 File: uwasy.fd 2003/10/30 v2.0 Wasy-2 symbol font definitions
 ) [1
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2] [3] [4] [5]
-Overfull \hbox (3.55109pt too wide) detected at line 459
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2] [3] [4]
+Overfull \hbox (3.55109pt too wide) detected at line 423
 [] \OMS/cmsy/m/n/10 ^^A [] \OT1/cmr/m/n/10 = []  [] 
  []
 
+[5]
 
 LaTeX Font Warning: Font shape `U/wasy/b/n' in size <7> not available
-(Font)              Font shape `U/wasy/m/n' tried instead on input line 471.
+(Font)              Font shape `U/wasy/m/n' tried instead on input line 435.
 
 
 LaTeX Font Warning: Font shape `U/wasy/b/n' in size <5> not available
-(Font)              Font shape `U/wasy/m/n' tried instead on input line 471.
+(Font)              Font shape `U/wasy/m/n' tried instead on input line 435.
 
-[6] [7]) (./solving_approaches.tex [8]
+[6]
+Overfull \hbox (26.10321pt too wide) in paragraph at lines 580--588
+ [][] 
+ []
+
+[7] [8]) (./solving_approaches.tex
 Underfull \hbox (badness 10000) in paragraph at lines 26--27
 
  []
 
-) [9] (./main.aux) ) 
+[9]) [10] (./main.aux) ) 
 Here is how much of TeX's memory you used:
- 14315 strings out of 493848
- 247840 string characters out of 1152823
- 342277 words of memory out of 3000000
- 17215 multiletter control sequences out of 15000+50000
- 15149 words of font info for 59 fonts, out of 3000000 for 9000
+ 15339 strings out of 493848
+ 266076 string characters out of 1152823
+ 365394 words of memory out of 3000000
+ 18215 multiletter control sequences out of 15000+50000
+ 15448 words of font info for 60 fonts, out of 3000000 for 9000
  714 hyphenation exceptions out of 8191
- 56i,10n,60p,415b,689s stack positions out of 5000i,500n,10000p,200000b,50000s
-</usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cm
-bx10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmbx12.pfb></
-usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/t
-exmf-texlive/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texmf-texliv
-e/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texmf-texlive/fonts/typ
-e1/public/amsfonts/cm/cmmi5.pfb></usr/share/texmf-texlive/fonts/type1/public/am
-sfonts/cm/cmmi6.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cm
-mi7.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmmi8.pfb></us
-r/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmmib10.pfb></usr/share/te
-xmf-texlive/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texmf-texlive/
-fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texmf-texlive/fonts/type1/
-public/amsfonts/cm/cmr5.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfon
-ts/cm/cmr6.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr7.pf
-b></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share
-/texmf-texlive/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf-texl
-ive/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/share/texmf-texlive/fonts/ty
-pe1/public/amsfonts/cm/cmsy7.pfb></usr/share/texmf-texlive/fonts/type1/public/a
-msfonts/cm/cmsy8.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/symb
-ols/msbm10.pfb>
-Output written on main.pdf (9 pages, 252285 bytes).
+ 56i,12n,60p,415b,800s stack positions out of 5000i,500n,10000p,200000b,50000s
+</usr/share/texmf-texlive/fonts/type1/public/amsfonts/c
+m/cmbx10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmbx12.pf
+b></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/sha
+re/texmf-texlive/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texmf-te
+xlive/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texmf-texlive/fonts
+/type1/public/amsfonts/cm/cmmi5.pfb></usr/share/texmf-texlive/fonts/type1/publi
+c/amsfonts/cm/cmmi6.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/c
+m/cmmi7.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmmi8.pfb>
+</usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmmib10.pfb></usr/shar
+e/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texmf-texl
+ive/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texmf-texlive/fonts/ty
+pe1/public/amsfonts/cm/cmr5.pfb></usr/share/texmf-texlive/fonts/type1/public/am
+sfonts/cm/cmr6.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr
+7.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/s
+hare/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/share/texmf-te
+xlive/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf-texlive/fonts
+/type1/public/amsfonts/cm/cmsy6.pfb></usr/share/texmf-texlive/fonts/type1/publi
+c/amsfonts/cm/cmsy7.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/c
+m/cmsy8.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/symbols/msbm1
+0.pfb>
+Output written on main.pdf (10 pages, 277111 bytes).
 PDF statistics:
- 214 PDF objects out of 1000 (max. 8388607)
- 59 named destinations out of 1000 (max. 500000)
- 61 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 247 PDF objects out of 1000 (max. 8388607)
+ 71 named destinations out of 1000 (max. 500000)
+ 69 words of extra memory for PDF output out of 10000 (max. 10000000)
 

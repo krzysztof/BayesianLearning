@@ -11,6 +11,14 @@
 \usepackage{graphicx}
 \usepackage{longtable}
 \usepackage{wasysym}
+%
+\usepackage{caption}
+\usepackage{subcaption}
+
+\DeclareCaptionFormat{subfig}{\figurename~#1#2#3}
+\DeclareCaptionSubType*{figure}
+\captionsetup[subfigure]{format=subfig,labelsep=colon,labelformat=simple}
+
 %\usepackage{soul}
 \title{TYTUL \\ TYTUL2 \\ }
 \author{\textsc{Krzysztof Nowak}}

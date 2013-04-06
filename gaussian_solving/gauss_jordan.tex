@@ -1,5 +1,6 @@
 \section{Solving parameters using Gauss--Jordan elimination}
-Standard approach to solving determined sets of equations requires enough constrains to ensure uniqueness of the solution, without it being overdetermined.
+Some approaches to solving determined systems of linear equations such as Cramer's rule, require enough constrains to ensure uniqueness of the solution, without it being overdetermined at the same time.
+Numerical methods may be difficult to control, and could add additional approximations to the solution.
 In our case, the set of available equations is greater than required number of equations that satisfy above conditions.
 Out of $2^n$ possible binary vectors representing conditional probability of events, we are forced to pick $n$ that introduce the smallest error in further calculations.
 This approach can yield good results when done properly, but the question of which equations to choose remains unanswered.
@@ -9,7 +10,7 @@ Using Gauss--Jordan elimination, we can avoid this problem entirely, since it al
 The order of equations is also taken into account, so in cases of contradictions, certain combinations are preferred to others.
 For the remaining part of this section we will work with linear equations, since using product equations would require us to redefine elementary row operations, thus introducing unnecessary complications.
 \subsection{Example of Gauss--Jordan elimination}
-Let us work with this simple equation set presented in a standard matrix form $A \cdot X = b$.
+Let us propose a simple equation set presented in a standard matrix form $A \cdot X = b$.
 \begin{equation}
     \begin{bmatrix}
         1 & 1 & 1 & 0 \\
@@ -25,7 +26,7 @@ Let us work with this simple equation set presented in a standard matrix form $A
     \end{bmatrix}
 \end{equation}
 
-We will use symbols for vector \textbf{$b$}, so we can keep track of operations with constants.
+We will use symbols for vector \textbf{$b$}, so we can keep track of operations done on absolute terms.
 Turning that into augmented matrix $[A|b]$ yields
 
 \begin{equation}
@@ -37,16 +38,16 @@ Turning that into augmented matrix $[A|b]$ yields
 \end{bmatrix}
 \end{equation}
 
-Notice that this equation set may be contradictory if we were to use real numbers -- $x_3$ can be calculated as a linear combination of two first rows ($x_3 = b1 - b2$) or by taking fourth row as a solution ($x_3 = b4$).
-It is very likely that substituting $b1$, $b2$ and $b3$ with values calculated from the data file, would lead to $x_3$ being equal to two different numbers.
-Additionally, it is underdetermined -- there is not enough information about $x_1$ and $x_2$ to solve between them.
+Notice that this equation set may be contradictory if we were to use real numbers -- $x_3$ can be calculated as a linear combination of two first rows ($x_3 = b_1 - b_2$) or by taking fourth row as a solution ($x_3 = b_4$).
+It is plausible that substituting $b_1$, $b_2$ and $b_3$ with real values calculated from the data file or a database, would lead to $x_3$ being equal to two different numbers.
+Additionally, the equation set is underdetermined -- there is not enough information about $x_1$ and $x_2$ to solve them independently.
 %Trying to approach that equation set on purely mathematical grounds would lead to quick conclusion that it doesn't make much sense (because of the contradictions).
 %Because of the nature of our data and the model, which base on approximations, we allow for certain 
-We will now perform Gauss--Jordan elimination steps in order to show that certain properties we care about (such as preserving preference of equations determined by their order) apply.
 
-Since we do not focus on any particular column, so we will try to solve the whole equation.
+We will now perform Gauss--Jordan elimination steps in order to show that certain properties we care about (such as preserving preference of equations determined by their order) are taken into account.
+
 We will distinguish pivot elements with colors red (currently selected pivot element) and blue (previous pivot elements).
-We always prefer the topmost pivot element in given column.
+\textbf{During the algorithm we will prefer the topmost pivot element in given column -- this way we assure that topmost equations will be more significant}
 
 \begin{enumerate}
 \item We choose the first pivot element (in red), and use it to zero-out remaining coefficients in first column.
@@ -67,7 +68,6 @@ We always prefer the topmost pivot element in given column.
 \end{equation}
 \item We select the second pivot element - note that no two pivot elements can share the same row.
 The first non-zero element that satisfies this condition is coefficient of $x_3$ in the second row.
-Choosing the first element from the top guarantees that the order of preference of equations in taken into account.
 \begin{equation}
 \begin{bmatrix}[cccc|c]
     \textcolor{blue}{1} & 1 & 1 & 0 & b_1 \\ 
@@ -130,7 +130,7 @@ Let us compare our end-result with the initial matrix:
 \end{equation}
 
 As we can see, $x_3$ was calculated using first and the second row ($b_1 - b_2$).
-Let us see what happens after we move the third row on the top position, indicating that our preferred ordering of equation changed. (We expect now to calculate $x_3$ solely by first row).
+Let us see what happens after we move the third row on the top position, indicating that our preferred ordering of equations changed. (We expect now to calculate $x_3$ solely by first row).
 
 \begin{enumerate}
 \item We choose the our first pivot element, and use it to zero-out remaining coefficients in first column.
@@ -165,7 +165,7 @@ Again, no candidate for pivot element in the second column, coefficient at $x_3$
     0 & 0 & 0 & 0 & b_3 - b_2 + b_1 \\ 
     0 & 0 & 0 & 1 & b_4
 \end{bmatrix}
-\end{equation}.
+\end{equation}
 \item Last item fit for a pivot element is a coefficient at $x_4$ in fourth row.
 After getting rid of zero vectors, we achieve the following reduced row echelon form matrix
 \begin{equation}
@@ -181,19 +181,29 @@ After getting rid of zero vectors, we achieve the following reduced row echelon 
     \textcolor{blue}{1} & 1 & 0 & 0 & b_2-b_1 \\ 
     0 & 0 & 0 & \textcolor{blue}{1} & b_4
 \end{bmatrix}
-\end{equation}.
+\end{equation}
 \end{enumerate}
 
 As expected, $x_3$ was calculated using the most preferred set of equations, as dictated by their order.
-What this method does not take into account is the relative weight (or preference) of each row.
+What this method does not take into account is the relative weight of each row.
 As of yet, all we could rely on was simple ordering of equations, without using the information about quantity or frequency of each type of equation in our learning set.
 If our method was to provide that feature to us as well, we could talk about very complete and solid solution that can be expected to perform optimally.
 
 \subsection{Properties of zero vectors}
-In this section we will describe how solving the equation set without any particular ordering does not prevent us from reproducing other ways to calculate given parameter.
-As we saw previously, different order of equation may lead to different outcomes for certain parameters.
+In this section we will describe how solving the equation set using one order does not prevent us from reproducing other solutions for given parameter.
+As we saw previously, different order of equations may lead to different outcomes for certain parameters.
 This variety came from contradictions in the equation set.
-Zero vectors that emerge during Gauss--Jordan elimination contain information about other ways to calculate given value.
+\begin{description}
+\item[Zero vector]\hfill\\
+    We will use the term ``zero vector'' to describe the vectors of the form
+    \begin{equation}
+    \begin{bmatrix}[cccc|c]
+        0 & 0 & 0 & 0 & M(b)
+    \end{bmatrix},
+    \end{equation}
+    where $M(b)$ is a linear combination of absolute terms (vector $b$).
+\end{description}
+Zero vectors that emerge during Gauss--Jordan elimination contain information about other possible solutions for given value.
 Instead of removing them in the process, we can store them, and utilize them later.
 Let us see how previous example holds to that theory.
 
@@ -275,53 +285,6 @@ Linear combination of two vectors again yields a different solution
 \end{bmatrix}
 \end{equation}
 
-The above property is crucial in showing that although the method itself does not take relative frequency, or weight between the equations in a set, it does provide us with a collection of solutions for given parameter.
-This way we can iterate over the set of possible solutions and choose the one that minimizes the relative error best, or take a weighted average as our solution.
-
-Let us append some quality measures to each equation in a dataset.
-The whole equation set adds up to 2500 records.
-We can calculate a frequency for every vector, and treat them as weights.
-
-\begin{equation}
-\begin{matrix}[cccc|c|c|c]
-     &  &  &  & \mbox{probability} & \mbox{quantity} & \mbox{frequency Fq($b_i$)} \\
-    \hline
-    0 & 0 & 1 & 0 & b_1 & 980 & 0.392 \\
-    1 & 1 & 1 & 0 & b_2 & 760 & 0.304 \\ 
-    1 & 1 & 0 & 0 & b_3 & 440 & 0.176 \\ 
-    0 & 0 & 0 & 1 & b_4 & 320 & 0.128 \\ 
-    \hline
-     &  &  &  &  & 2500 & \\ 
-\end{matrix}
-\end{equation}
-
-Using this data we can propose few heuristics for calculating final value of $x_3$ or compare different solutions.
-Let us propose a fitness function for a solution:
-
-\begin{equation}
-    F(s) = \frac{\displaystyle\prod_{b_{i} \in s} Fq(b_i)}{ \displaystyle\sum_{b_i \in s}1},
-\end{equation},
-where $b_i \in s$ is true when $b_i$ is taken into account (adding or subtracting) in given solution.
-
-\begin{equation}
-\begin{matrix}[cccc|c|c]
-     &  &  &  & \mbox{probability} & \mbox{fitness function F(s)} \\
-    \hline
-    [0 & 0 & 1 & 0]_1 & b_1 & 0.392 \\
-    [0 & 0 & 1 & 0]_2 & b_2 - b_3 & \frac{0.304 \cdot 0.176}{2} = 0.24 \\ 
-\end{matrix}
-\end{equation}
-
-At this point we can pick a solution with a higher fitness value, or take weighted average of each solution as our final answer:
-
-\begin{equation}
-\begin{matrix}[cccc|c]
-     &  &  &  & \mbox{probability}\\
-    \hline
-    [0 & 0 & 1 & 0] & \frac{0.392 \cdot b_1 + 0.24 \cdot (b_2 - b_3)}{0.392+0.24}\\
-\end{matrix}
-\end{equation}
-
 Let us look at the example of the equation set with multiple zero vectors:
 
 \begin{equation}
@@ -360,7 +323,8 @@ v_1 \\ v_2 \\ v_3 \\ v_4 \\ v_5 \\ v_6
 \label{eq:gauss_jordan1}
 \end{equation}
 
-Let us mark each vector in a reduced row echelon form ($v_1 \ldots v_6$). As we had shown previously, we can use zero vectors to obtain different solutions to parameters $x_1 \ldots x_4$, for example:
+Let us mark each vector in a reduced row echelon form (Equation~\ref{eq:gauss_jordan1}) as $v_1 \ldots v_6$.
+As we had shown previously, we can use zero vectors to obtain different solutions to parameters $x_1 \ldots x_4$, for example:
 
 \begin{equation}
 \begin{matrix}[cccc|c|c]
@@ -388,7 +352,7 @@ Notice that the second solution for $x_4$ (in red above) requires two zero vecto
 We would like to propose a conjecture describing relationship of possible solutions with zero vectors in reduced row echelon form matrix.
 \begin{description}
 	\item[Zero-vector conjecture] \hfill \\
-        Every possible solution for given parameter can be obtained as a linear combination of a solution vector from Gauss--Jordan elimination, and the zero vectors, i.e.,
+        Every possible solution for given parameter $q$ can be obtained as a linear combination of a solution vector from Gauss--Jordan elimination, and the zero vectors, i.e.,
     {\large
     \begin{equation}
     \begin{matrix}
@@ -396,10 +360,10 @@ We would like to propose a conjecture describing relationship of possible soluti
     \end{matrix}
     \end{equation}
     }
-    where $s \in S$ is a solution vector $s$ for given parameter from a solution space $S$ \\
-    $a \in V$ is a vector of coefficients from a vector space $V$, over a field $\mathbb{R}$ \\
-    $s_0$ is a first solution (also a vector over a field $\mathbb{R}$) for given parameter, as obtained from Gauss--Jordan elimination \\
-    and $z_i$ is the $i$-th zero vector obtained from Gauss--Jordan elimination ($i \in 1\ldots n$). \\
+    where $s \in S$ is a solution vector $s$ for parameter $q$ from a space of all possible solutions $S$ \\
+    $a \in V$ is the vector of coefficients from a vector space $V$ over a field $\mathbb{R}$ \\
+    $s_0$ is the first solution (also a vector over a field $\mathbb{R}$) for given parameter, as obtained from Gauss--Jordan elimination \\
+    $z_i$ is the $i$-th zero vector obtained from Gauss--Jordan elimination ($i \in 1\ldots n$). \\
     $n$ is the number of zero vectors in reduced row echelon form.
 	\item[Proof] \hfill \\
     If the equation set is determined, each parameter has a unique solution. Since in that case there are no zero vectors, $n=0 => s = [1] \cdot [s_0] = s_0$.\\
@@ -426,7 +390,7 @@ We would like to propose a conjecture describing relationship of possible soluti
             \end{equation}
             }
 
-            Example: Equation~\ref{eq:gauss_jordan1} could also be written as
+            Example: Equivalence relation~\ref{eq:gauss_jordan1} could also be written as an equation:
             \begin{equation}
             \begin{bmatrix}
                 0 & 1 & -1 & 1 & 0 & 0 \\
@@ -457,7 +421,7 @@ We would like to propose a conjecture describing relationship of possible soluti
             \end{matrix}
             \label{eq:gauss_jordan2}
             \end{equation}
-            in which case the leftmost matrix would be our linear combination of Gauss--Jordan elimination steps.
+            in which case the leftmost matrix would be our linear combination of Gauss--Jordan elimination algorithm.
 
         \item[Solution vector] \hfill \\
             Solution vector is a single row in a matrix (usually obtained by linear combination of the equation set), directly solving given parameter $x_k$ (vector $[\;0 \;\ldots\;0\;1\;0\; \ldots 0 \;|\; b\;]$ with ``$1$'' at the $k$-th place, and some absolute term $b$ in its augmented form).
@@ -491,12 +455,12 @@ We would like to propose a conjecture describing relationship of possible soluti
         Because $s_k$ is a vector in $L_k \cdot \boldsymbol{A}$ then $s_k$ is also a vector in $L_k \cdot L_0^{-1} \cdot \boldsymbol{B}$.
         In that case we can use a linear combination $L_k \cdot L_0^{-1}$ to go from solution $s_0$ to $s_k$.
 
-    \item Vector $s_k$ in $L_k \cdot L_0^{-1} \cdot \boldsymbol{A}$ is a linear combination of vectors no other than $s_0$ and the zero vectors in $\boldsymbol{B}$:\hfill \\
+    \item Vector $s_k$ in $L_k \cdot L_0^{-1} \cdot \boldsymbol{B}$ is a linear combination of vectors no other than $s_0$ and the zero vectors in $\boldsymbol{B}$:\hfill \\
         \textcolor{red}{(Quite hand-wavy argument I'm not satisfied with yet)}
 
         Because $\boldsymbol{B}$ is a reduced row echelon form, the following property holds: no two non-zero coefficients in reduced row echelon form share the same column.
 
-        Let us assume that vector $s_k$ is calculated using two non-zero vectors in it's linear combination from $\boldsymbol{B}$ to $L_k \cdot A$.
+        Let us assume that vector $s_k$ is calculated using two non-zero vectors in its linear combination from $\boldsymbol{B}$ to $L_k \cdot \boldsymbol{A}$.
         In that case, $s_0$ has to appear in a linear combination with a non-zero coefficient since no other non-zero vector can produce a $1$ in $m$-th column in $s_k$.
         Additionally, any linear combination involving any two non-zero vectors from $\boldsymbol{B}$ with both coefficients other than $0$ will produce a vector with at least two coefficients other than $0$.
         Such vector would not be a solution vector, which $s_k$ is. Contradiction.
@@ -508,13 +472,13 @@ Finding such linear combination is no trivial task.
 The solution space is infinite, and virtually any linear combination of zero vectors can be added to any non-zero vector, giving us an valid solution (although the combination would be very inefficient in most cases)
 
 \subsection{Modifying systems of equations}
-In previous sections we showed that we can use Gauss-Jordan elimination to efficiently explore space of solution for each parameter.
+In previous sections we showed that we can use Gauss-Jordan elimination to explore space of solution for each parameter in fairly controlled environment.
 We have to remember however that our equations are not standard linear equations, but product equations.
 By product equations we mean equations such~as
 \begin{equation}
-    1 - (1-p_1)\cdot(1-p_2) \cdots (1-p_n) = b_k,\\
+    1 - (1-p_1)\cdot(1-p_2) \cdots (1-p_n) = b_k.\\
 \end{equation}
-where $p_i$ is the probability of $i$-th parent node activating the child node in question, with all other causes being not present (FIXME: UGLY), and $b_k$ is conditional probability of given events taking place.
+%where $p_i$ is the probability of $i$-th parent node activating the child node in question, with all other causes being not present (FIXME: UGLY), and $b_k$ is conditional probability of given events taking place.
 In order to simplify the equation, we introduce substitutions $\forall_kq_k = 1 - p_k$ and $c_k = 1 - b_k$.
 This gives us equation of form
 \begin{equation}
@@ -550,33 +514,155 @@ Taking logarithm of both sides yields the following system:
 
 Since this gives us a linear equation set, Gauss--Jordan elimination is applicable.
 \subsection{Eliciting leak parameter}
-Leak, when not expressed explicitly in the data file, is represented as a combination of all parent nodes being in the distinguished state.
-\begin{figure}[h!]
-  \begin{center}
-    \begin{tikzpicture}[scale=1.5]
-    \tikzstyle{vertex}=[draw,text=black,auto=left,circle,fill=white,minimum size=25pt]
-    \tikzstyle{blank}=[draw,color=white,text=black,auto=left,circle,fill=white,minimum size=25pt]
-    \node[vertex] (P1) at (1, 0) {$P_1$};
-    \node[vertex] (P2) at (1.8, 0) {$P_2$};
-    \node[vertex] (P3) at (2.6, 0) {$P_3$};
-    \node[blank] (dots) at (3.2, 0) {$\cdots$};
-    \node[vertex] (P4) at (3.8, 0) {$P_n$};
-    \node[vertex] (C) at (2.6, -1) {C};
+In this section we will discuss our approach to eliciting leak parameter from the data file.
+Since leak is slightly different from ordinary parameters, we have to approach this endeavour with high cautious.
+Leak, when not expressed explicitly in the data file, is represented in the probability of all parent nodes being in the distinguished state with child node being activated.
+%%\begin{figure}[h!]
+%    \begin{center}
+%     \noindent\begin{minipage}{.5\linewidth}%
+%        \begin{tikzpicture}[scale=1.5]
+%        \tikzstyle{vertex}=[draw,text=black,auto=left,circle,fill=white,minimum size=25pt]
+%        \tikzstyle{blank}=[draw,color=white,text=black,auto=left,circle,fill=white,minimum size=25pt]
+%        \node[vertex] (P1) at (1, 0) {$P_1$};
+%        \node[vertex] (P2) at (1.8, 0) {$P_2$};
+%        \node[vertex] (P3) at (2.6, 0) {$P_3$};
+%        \node[blank] (dots) at (3.2, 0) {$\cdots$};
+%        \node[vertex] (P4) at (3.8, 0) {$P_n$};
+%        \node[vertex] (C) at (2.6, -1) {C};
+%  
+%        \foreach \from/\to in {P1/C, P2/C, P3/C, P4/C}
+%        \draw[->, >=latex] (\from) -- (\to);
+%
+%        \end{tikzpicture}
+%        \caption{Simple Bayesian Network}
+%        \label{graph:bn1}
+%
+%    \end{minipage}%
+%    \begin{minipage}{.5\linewidth}
+%\begin{tabular}{|l|l|l|l|l|l|}
+%    
+%    \hline
+%    Prior & $Q_1$ & $Q_2$ & $Q_3$ & $\ldots$ & $Q_n$ \\
+%    \hline
+%    $P(Q_k,+)$ & $0.9$ & $0.9$ & $0.9$ & $\ldots$ & $0.9$ \\
+%    $P(Q_k,-)$ & $0.1$ & $0.1$ & $0.1$ & $\ldots$ & $0.1$ \\
+%    \hline
+%\end{tabular}
+%
+%\end{minipage}
+%
+%    \end{center}
+%    hello
+%%\end{figure}
+%%
+
+\begin{figure}[!ht]
+  \begin{subfigure}[b]{.5\linewidth}
+    \centering
+        \begin{tikzpicture}[scale=1.5]
+        \tikzstyle{vertex}=[draw,text=black,auto=left,circle,fill=white,minimum size=25pt]
+        \tikzstyle{blank}=[draw,color=white,text=black,auto=left,circle,fill=white,minimum size=25pt]
+        \node[vertex] (P1) at (1, 0) {$Q_1$};
+        \node[vertex] (P2) at (1.8, 0) {$Q_2$};
+        \node[vertex] (P3) at (2.6, 0) {$Q_3$};
+        \node[blank] (dots) at (3.2, 0) {$\cdots$};
+        \node[vertex] (P4) at (3.8, 0) {$Q_n$};
+        \node[vertex] (C) at (2.6, -1) {C};
   
-    \foreach \from/\to in {P1/C, P2/C, P3/C, P4/C}
-    \draw[->, >=latex] (\from) -- (\to);
-
-    \end{tikzpicture}
-    \caption{Simple BN}
+        \foreach \from/\to in {P1/C, P2/C, P3/C, P4/C}
+        \draw[->, >=latex] (\from) -- (\to);
+        \end{tikzpicture}
+    \caption{Structure of simple Bayesian Network}
     \label{graph:bn1}
-    \end{center}
-\end{figure}
+  \end{subfigure}%
+  \begin{subfigure}[b]{.5\linewidth}
+    \centering
+\begin{tabular}{|c|c|c|c|c|c|}
+    
+    \hline
+        & $Q_1$ & $Q_2$ & $Q_3$ & $\ldots$ & $Q_n$ \\
+    \hline
+    $P(Q_k=+)$ & $p_1$ & $p_2$ & $p_3$ & $\ldots$ & $p_n$ \\\hline
+    $P(Q_k=-)$ & $1-p_1$ & $1-p_2$ & $1-p_3$ & $\ldots$ & $1-p_n$ \\\hline
+\end{tabular}
 
-Let us assume that prior probability of probability of parents $P_1 \cdots P_n$ being in the distinguished stated is $d_1 \cdots d_n$ respectively.
-In that case, probability of vector describing leak is equal to:
+    \subcaption{Prior probability of parent nodes}
+    \label{table:bn1}
+  \end{subfigure}
+  %\caption{A figure with two subfigures}
+  %\label{fig:1}
+\end{figure}
+Let us assume that prior probability of parents $Q_1, \cdots, Q_n$ (see Figure~\ref{graph:bn1}) being in the distinguished stated is $(1-p_1), \cdots, (1-p_n)$ respectively.
+In that case, incidence of vector describing leak within the data file is equal to:
 \begin{equation}
-    \prod_{i=1}^n d_i
+    \prod_{i=1}^n (1-p_i)
+\end{equation}
+This is a trivial remark, since similar product can be derived for any combination of parent states.
+As we had shown previously, in case of other parameters we can aid our efforts of solving parameters by means of linear combination of vectors and linear algebra.
+We would like to achieve similar freedom in solving leak as well.
+This is especially important if parameters $p_1 \cdots p_n$ would be relatively high, favoring non-distinguished states to occur more often.
+Since in such cases records describing leak can be relatively rare, we can try to express leak as one of the explicit parameters.
+For this we will compare two approaches to interpreting leak within the data.
+\textcolor{red}{(reference to canonical.pdf - diez and henrion approach to leak)}
+\begin{equation}
+    P(y|x) = 1 - (1 - p_L) \cdot \prod_{i\in I(x)}(1-p_i)
+    \label{eq:diez_leak}
 \end{equation}
 
+\begin{equation}
+    P(y|x) = 1 - (1 - p_L) \cdot \prod_{i\in I(x)}\frac{1-p'_i}{1-p_L}
+    \label{eq:henr_leak}
+\end{equation}
 
-Since such records can be relatively rare in some cases, we can try to calculate it treating leak as one of the explicit parameter.
+Equation~\ref{eq:diez_leak} is the definition of leak by Diez[\textcolor{red}{reference}], while Equation~\ref{eq:henr_leak} is the definition proposed by Henrion[\textcolor{red}{reference}].
+We can make a transition between $p_k$ and $p'_k$ for any $k$ using Equation~\ref{eq:henr_diez_trans}.
+\begin{equation}
+    1-p_k = \frac{1-p'_k}{1-p_L}
+    \label{eq:henr_diez_trans}
+\end{equation}
+
+Since main concern of our research is learning from data, Henrion's definition is to be applied, but
+because it is easy to transition between these, we can explore both ways and choose the one that yields better flexibility.
+Let us see how we would approach adding leak to the data:
+
+\begin{table}[h!]
+\begin{center}
+\begin{tabular}{|l|l|l|l|l|l|l||p{1.5cm}|}
+	\hline
+	\# & $P_1$ & $P_2$ & $P_3$ & $P_4$ & Leak--Diez & Leak--Henrion & $P(y|x)$ \\\hline
+    1 & 1 & 1 & 0 & 0 & 1 & -1 & $p_1$ \\
+    2 & 0 & 1 & 1 & 1 & 1 & -2 & $p_2$ \\
+    3 & 1 & 1 & 1 & 0 & 1 & -2 & $p_3$ \\
+    4 & 0 & 0 & 1 & 0 & 1 & 0 & $p_4$ \\
+    5 & 0 & 0 & 0 & 0 & 1 & 1 & $p_5$ \\
+    %$\cdots$ & $\cdots$ & $\cdots$ & $\cdots$ & $\cdots$ & $\cdots$ & $\cdots$\\
+    \hline
+\end{tabular}
+	    \caption{Example of data supplemented with explicit leak parameters using both approaches.}
+		\label{tab:bn}
+\end{center}
+\end{table}
+
+Interpreting leak by Diez's definition results in adding a column of ones to the data, indicating that leak was present in every case (this also derives from Equation~\ref{eq:diez_leak}).
+
+The values in the column ``Leak--Henrion'' may be interpreted as exponents of each item in the product.
+Negative value $-k$ indicates positive exponent $k$ in the denominator of the product (Equation~\ref{eq:henr_leak}).
+This rule still holds after we take logarithm of both sides, since then we treat the values in the data as coefficients of logarithms.
+
+\begin{enumerate}
+\item \textbf{Diez's definition:}\hfill\\ 
+Algorithm would be performed in three steps:
+\begin{enumerate}
+    \item Solve the equation set for leak first
+    \item Apply transition~\ref{eq:henr_diez_trans} to the original parameters
+    \item Solve the original equation (without leak) for each of the parameters
+\end{enumerate}
+This would yield us the final parameters with leak included, as defined by Henrion.
+
+\item \textbf{Henrion's definition:}\hfill\\
+    Since the Equation~\ref{eq:henr_leak} already suits our case of learning from data, solving the equation yields us the final parameters.
+\end{enumerate}
+
+It may seem that second approach is simpler and handles the issues with leak for us, since there's no additional step of including leak to initial parameters from Diez's approach.
+Yet, since they are equivalent, there's no other way than to agree that potential error in leak will carry on to parameters with both approaches anyway.
+In that case, using Henrion's approach to supplement the data with leak is slightly disadvantageous, since it limits our solution for leak to the first solution obtained by Gauss--Jordan elimination.
