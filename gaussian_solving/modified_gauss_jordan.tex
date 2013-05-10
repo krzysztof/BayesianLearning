@@ -1,4 +1,7 @@
-We can introduce a matrix notation for such equation set, with exponents of parameters as values:
+\subsection{Modified Gauss-Jordan elimination}
+In this subsection we will describe a slightly modified Gauss--Jordan elimination.
+
+We can introduce a matrix notation for given product--equation set, with exponents of parameters as values:
 \begin{equation}
 \begin{bmatrix}[cccc|c]
     1 & 1 & 1 & 1 & c_1\\
@@ -95,3 +98,7 @@ This way we can define a new set of elementary operations as described in Table~
 		\label{tab:modified_elementary}
 \end{center}
 \end{table}
+The algorithm itself does not change as long as we apply the newly derived elementary row operations for exponents.
+
+Method proposed above is equivalent to standard Gauss--Jordan elimination, but does not require taking logarithm of both sides of equation.
+For simplicity, we will regard previous approach as the default one, but it was worth mentioning this approach as well for cases where it would simplify the implementation efforts.

@@ -14,7 +14,8 @@ These can rely on choosing the best solution out of all that are possible, or co
         This will not automatically improve the result, but will average-out the error, which in most cases may result good solutions.
         This may be especially useful in case where it's difficult to propose a fitness function that describes the error accurately.
 \end{enumerate}
-Since both approaches rely on similar input (fitness function, initial set of $k$ candidates) we'll try to describe it first.
+
+Since both approaches rely on similar input (fitness function, initial set of $k$ candidates) we'll try to describe them first.
 
 \begin{description}
     \item[Candidates for the solution]
@@ -23,11 +24,32 @@ Since both approaches rely on similar input (fitness function, initial set of $k
 \end{description}
 
 \begin{description}
-    \item[Candidates for fitness function] \hfill \\
+    \item[Fitness function] \hfill \\
     \begin{enumerate}
         \item \textbf{Relative frequency of each combination in a data file}
         Intuitively it is clear that the error is inversely proportional to the frequency of given combination within the data file.
         First good guess for a fitness function could be the frequency with which given equation appears in a data file.
+        \item \textbf{Fitness based on confidence interval}
+        We define confidence interval for a fraction as follows:
+        \begin{equation}
+            P \left( \frac{x}{n}-u_{\alpha} \sqrt{\frac{\frac{x}{n}(1-\frac{x}{n})}{n}} < p < \frac{x}{n}+u_{\alpha} \sqrt{\frac{\frac{x}{n}(1-\frac{x}{n})}{n}} \right)= 1 - \alpha,
+        \end{equation}
+        where
+        \begin{itemize}
+            \item x - size of population where $P(y=True|x)$ for given event $x$
+            \item n - size of the sample
+            \item $u_{\alpha}$ - coefficient derived from cumulative distribution function. (\textcolor{red}{FIXME: severly requires a better translation})
+        \end{itemize}
+        Since we require a fitness function, we can adapt the part responsible for the width of the interval as our fitness:
+        \begin{equation}
+            F'(x,n) = u_{\alpha} \sqrt{\frac{\frac{x}{n}(1-\frac{x}{n})}{n}}
+        \end{equation}
+        The solution is a linear combination of such fractions.
+        We can take the maximum spear as our final fitness.
+        \begin{equation}
+            F(s) = \mbox{max}\{F'(x,n) | \mbox{ for each } (x,n) \mbox{in solution}\}
+        \end{equation}
+
     \end{enumerate}
 \end{description}
 

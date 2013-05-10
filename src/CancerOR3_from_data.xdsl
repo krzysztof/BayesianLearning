@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<smile version="1.0" id="Network2" numsamples="1000" discsamples="10000">
+	<nodes>
+		<cpt id="Smoker">
+			<state id="True" />
+			<state id="False" />
+			<probabilities>0.7985 0.2015</probabilities>
+		</cpt>
+		<cpt id="Genetic">
+			<state id="True" />
+			<state id="False" />
+			<probabilities>0.7055 0.2945</probabilities>
+		</cpt>
+		<cpt id="CoalWorker">
+			<state id="True" />
+			<state id="False" />
+			<probabilities>0.837 0.163</probabilities>
+		</cpt>
+		<cpt id="BadDiet">
+			<state id="True" />
+			<state id="False" />
+			<probabilities>0.5540000000000001 0.446</probabilities>
+		</cpt>
+		<noisymax id="LungCancer">
+			<state id="True" />
+			<state id="False" />
+			<parents>Smoker Genetic CoalWorker BadDiet</parents>
+			<strengths>0 1 0 1 0 1 0 1</strengths>
+			<parameters>0.585482576578 0.414517423422 0 1 0.2169523031405 0.7830476968595 0 1 0.1310148031405 0.8689851968595 0 1 0.08059976407799996 0.919400235922 0 1 0.1931640625 0.8068359375</parameters>
+		</noisymax>
+	</nodes>
+	<extensions>
+		<genie version="1.0" app="GeNIe 2.0.4535.0" name="Network2" faultnameformat="nodestate">
+			<node id="Smoker">
+				<name>Smoker</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>66 226 149 284</position>
+				<barchart active="true" width="128" height="64" />
+			</node>
+			<node id="Genetic">
+				<name>Genetic</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>272 153 363 223</position>
+				<barchart active="true" width="128" height="64" />
+			</node>
+			<node id="LungCancer">
+				<name>LungCancer</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>303 378 371 420</position>
+				<barchart active="true" width="128" height="64" />
+			</node>
+			<node id="CoalWorker">
+				<name>CoalWorker</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>428 231 497 274</position>
+				<barchart active="true" width="128" height="64" />
+			</node>
+			<node id="BadDiet">
+				<name>BadDiet</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>596 243 648 275</position>
+				<barchart active="true" width="128" height="64" />
+			</node>
+		</genie>
+	</extensions>
+</smile>
