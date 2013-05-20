@@ -137,5 +137,5 @@ def main():
 
 if __name__ == "__main__":
     #print_for_n(int(sys.argv[1]))
-    #main()
-    pass
+    main()
+    #pass

@@ -20,6 +20,55 @@ void printMap(keyMap &keymap) {
     }
 }
 
+//void cancerNet(ifstream ifs){
+//	DSL_network theNet;
+//	DSL_stringArray tfnames;
+//	tfnames.Add("True");
+//	tfnames.Add("False");
+//
+//	int smoker = theNet.AddNode(DSL_CPT, "Smoker");
+//	int genetic = theNet.AddNode(DSL_CPT, "Genetic");
+//	int coalworker = theNet.AddNode(DSL_CPT, "CoalWorker");
+//	int baddiet = theNet.AddNode(DSL_CPT, "BadDiet");
+//
+//	int cancer = theNet.AddNode(DSL_CPT, "LungCancer");
+//
+//	int parents[] = {smoker, genetic, coalworker, baddiet};
+//
+//	DSL_doubleArray theProbs;
+//
+//
+//	theProbs.Flush();
+//	theProbs.SetSize(2);
+//
+//	for(int i=0; i<4 ; ++i) {
+//		
+//		cin >> theProbs[0];
+//		theProbs[1] = 1.0 - theProbs[0];
+//		//cin >> theProbs[1];
+//		theNet.GetNode(parents[i])->Definition()->SetNumberOfOutcomes(tfnames);
+//		theNet.GetNode(parents[i])->Definition()->SetDefinition(theProbs);
+//
+//		theNet.AddArc(parents[i], cancer);
+//	}
+//
+//	theProbs.Flush();
+//	theProbs.SetSize(32);
+//	for(int i=0;i<32;i=i+2) {
+//		cin >> theProbs[i];
+//		theProbs[i+1] = 1.0 - theProbs[i];
+//		//theProbs[i] = 0.4;
+//		//theProbs[i+1] = 0.6;
+//	}
+//
+//	theNet.GetNode(cancer)->Definition()->SetNumberOfOutcomes(tfnames);
+//	theNet.GetNode(cancer)->Definition()->SetDefinition(theProbs);
+//	theNet.GetNode(cancer)->ChangeType(DSL_NOISY_MAX);
+//
+//	printCPT(theNet.GetNode(cancer));
+//	theNet.WriteFile("tutorial.dsl");
+//}
+
 cptMap get_cptmap(DSL_node *node) {
     DSL_network* net = node->Network(); // node network                                                                   
     int handle = node->Handle();

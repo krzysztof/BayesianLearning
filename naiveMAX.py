@@ -1,4 +1,4 @@
-from utilities import read_data, match_by_column, binarize, ZERO_PROB_EPS, ONE_PROB_EPS, NO_PROB_EPS, max_based, LEAKDEF
+from utilities import read_data, match_by_column, binarize, ZERO_PROB_EPS, ONE_PROB_EPS, NO_PROB_EPS, LEAKDEF, CPT
 from collections import Counter, defaultdict
 import sys
 
@@ -27,10 +27,20 @@ def main(filename, child_name):
 		#	params.append(ONE_PROB_EPS)
 		else:
 			params.append(items_dict[comb][0])
-				
-	for comb, prob in max_based(params, leakdef = LEAKDEF.HENRION, handle_errors = True):
-		print comb, prob
+	
+	leak = params[-1]
+	params = reduce( lambda x,y: x+y, [[a,0] for a in params[:-1]]) + [leak,]
+	parent_dims = [2]*n
+	labels = []
+	for h in data['header']:
+		labels.append(["True", "False"])
+		
+	naive_or = CPT([params, [1.0 - p for p in params]], parent_dims, CPT.TYPE_NOISY_MAX, data['header'], labels)
+	naive_cpt = naive_or.max_based()
+
+	print naive_cpt.print_raw()
 
 if __name__ == "__main__":
-	main(sys.argv[1],"LungCancer")
+	#main(sys.argv[1],"LungCancer")
+	main(sys.argv[1],"C1")
 	

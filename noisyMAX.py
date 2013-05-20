@@ -5,7 +5,7 @@ from math import log, sqrt
 from collections import Counter
 from GaussJordan import GaussJordanElimination, augment
 from fractions import Fraction
-from utilities import read_data, match_by_column, get_or_default, binarize, max_based, LEAKDEF
+from utilities import read_data, match_by_column, get_or_default, binarize, LEAKDEF, CPT
 
 def mainGJ(filename, **kwargs):  # TODO: FIX THE KWARGS !!!
 	""" Main execution using GaussJordan elimination"""
@@ -13,7 +13,10 @@ def mainGJ(filename, **kwargs):  # TODO: FIX THE KWARGS !!!
 	DEBUG = get_or_default(kwargs, 'DEBUG', False)
 	data = read_data(filename, ' ')
 	c = Counter(data['data'])
-	new_counter = match_by_column(c, 4)
+	child_name = "C1"
+	child_idx = data['header'].index(child_name)
+	num_columns = len(data['header'])
+	new_counter = match_by_column(c, child_idx)
 
 	binary_data = binarize(new_counter)
 
@@ -115,8 +118,9 @@ def mainGJ(filename, **kwargs):  # TODO: FIX THE KWARGS !!!
 					break
 
 	GJElim_fit_distribution = []
-	for i in range(5):
-		solutions_filtered = [s for s in sorted(solutions, key= lambda x: x[-1], reverse=True) if s[0][i] == 1][:5]
+	num_best_solutions = 5
+	for i in range(num_columns):
+		solutions_filtered = [s for s in sorted(solutions, key= lambda x: x[-1], reverse=True) if s[0][i] == 1][:num_best_solutions]
 		GJElim_fit_distribution.append(solutions_filtered[0][-2])
 		suma = sum(s[-1]*s[-2] for s in solutions_filtered)
 		if DEBUG:
@@ -129,7 +133,7 @@ def mainGJ(filename, **kwargs):  # TODO: FIX THE KWARGS !!!
 		print augment([A2, b2, b3])
 
 	GJElim_distribution = []
-	for i in range(5):
+	for i in range(num_columns):
 		for j in range(A2.shape[0]):
 			if A2[j][i] == 1:
 				GJElim_distribution.append(b3[j])
@@ -137,7 +141,21 @@ def mainGJ(filename, **kwargs):  # TODO: FIX THE KWARGS !!!
 	GJElim_distribution = [(d if d>0 else 10e-5) for d in GJElim_distribution]
 	GJElim_fit_distribution = [(d if d>0 else 10e-5) for d in GJElim_fit_distribution]
 
-	return GJElim_distribution, GJElim_fit_distribution
+	outs = []
+	labels = []
+	for h in data['header']:
+		labels.append(["True", "False"])
+		#FIXME: data['domain'] does not keep states sorted so states are messed up
+		#labels.append(data['domain'][h])
+		
+	for solution in [GJElim_distribution, GJElim_fit_distribution]:
+		leak = solution[-1]
+		params = reduce( lambda x,y: x+y, [[a,0] for a in solution[:-1]]) + [leak,]
+		parent_dims = [2]*(num_columns-1)
+		GJ_CPT = CPT([params, [1.0 - p for p in params]], parent_dims, CPT.TYPE_NOISY_MAX, data['header'], labels)
+		outs.append(GJ_CPT)
+
+	return outs
 
 def nice_result(result):
 	for state, value in result:
@@ -149,9 +167,13 @@ if __name__ == "__main__":
 	#RunTests()
 	GJ, GJFit = mainGJ(sys.argv[1])
 	if sys.argv[2] == "GJ":
-		algo = GJ
+		cpt = GJ
 	elif sys.argv[2] == "GJFit":
-		algo = GJFit
-		
-	result =  max_based(algo, LEAKDEF.LEAK_ONLY)
-	nice_result(result)
+		cpt = GJFit
+
+	max_based = cpt.max_based()
+	print max_based.print_raw()
+
+
+	#result =  max_based(algo, LEAKDEF.LEAK_ONLY)
+	#nice_result(result)

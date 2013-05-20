@@ -83,7 +83,7 @@ def main():
 	dist_func = eucl_dist
 
 	cpp_generator = "./NoisyMAXSmile/generator"
-	cpp_learner = "./NoisyMAXSmile/learner"
+	cpp_learner = "./NoisyMAXSmile/smile_learner"
 	py_learner = "./noisyMAX.py"
 	naive_learner = "./naiveMAX.py"
 	#network = "./src/CancerOR.xdsl"
@@ -153,13 +153,13 @@ def main():
 	for filename, i in sety:
 		subdata_gj = []
 		subdata_gjf = []
-		subdata_genie = []
+		subdata_smile = []
 		subdata_naive = []
 		for t in xrange(reps):
 			seed = rnd.randint(1,10**6)
 			gen_command = "%s %d %s %d > %s" % (cpp_generator, i, network, seed, dataset_file)
 			#learn_command_em = "%s %s %s EM" %(cpp_learner, dataset_file, network_cpt)
-			learn_command_genie = "%s %s %s Genie" %(cpp_learner, dataset_file, network_cpt)
+			learn_command_smile = "%s %s %s Smile" %(cpp_learner, dataset_file, network_cpt)
 			learn_command_GJ = "python %s %s GJ" %(py_learner, dataset_file)
 			learn_command_GJFit = "python %s %s GJFit" %(py_learner, dataset_file)
 			learn_command_naive = "python %s %s" %(naive_learner, dataset_file)
@@ -177,9 +177,9 @@ def main():
 			d_r_gjf =  distance(real_out, GJFit_out, dist_func)
 			print "GJFit", d_r_gjf
 
-			genie_out = makedict(exec_command(learn_command_genie))
-			d_r_g =  distance(real_out, genie_out, dist_func)
-			print "Genie", d_r_g
+			smile_out = makedict(exec_command(learn_command_smile))
+			d_r_g =  distance(real_out, smile_out, dist_func)
+			print "SMILE", d_r_g
 
 			naive_out = makedict(exec_command(learn_command_naive))
 			d_r_naive =  distance(real_out, naive_out, dist_func)
@@ -187,15 +187,15 @@ def main():
 
 			subdata_gj.append(d_r_gj)
 			subdata_gjf.append(d_r_gjf)
-			subdata_genie.append(d_r_g)
+			subdata_smile.append(d_r_g)
 			subdata_naive.append(d_r_naive)
 			
 		data.append(subdata_gj)
 		data.append(subdata_gjf)
-		data.append(subdata_genie)
+		data.append(subdata_smile)
 		data.append(subdata_naive)
 
-	boxNames = ["Gauss-Jordan", "Gauss-Jordan (confidence variant)", "Genie", "Naive"]
+	boxNames = ["Gauss-Jordan", "Gauss-Jordan (confidence variant)", "SMILE", "Naive"]
 	boxColors = ['darkkhaki', 'indianred', 'forestgreen', 'royalblue' ]
 
 	make_boxplot(data, labels, boxColors, boxNames )
