@@ -1,22 +1,26 @@
 CC = g++
 SMILE = smile
 SMILEARN = smilearn
-CFLAGS = -O3 -ffast-math
+CFLAGS = -O3 -ffast-math -Wall
 #CFLAGS =   
 
-.PHONY: all generator smile_learner naive_learner test clean
+.PHONY: test Experiment GaussJordan.o Learners.o Generator.o
 
-all: generator smile_learner naive_learner
-	
-generator: 
-	$(CC) $(CFLAGS) generator.cpp -o generator -l$(SMILE) -l$(SMILEARN)
-smile_learner: 
-	$(CC) $(CFLAGS) smile_learner.cpp -o smile_learner -l$(SMILE) -l$(SMILEARN)
-naive_learner: 
-	$(CC) $(CFLAGS) naive_learner.cpp -o naive_learner -l$(SMILE) -l$(SMILEARN)
-test:
-	$(CC) $(CFLAGS) test.cpp -o test -l$(SMILE) -l$(SMILEARN)
-test_run:
-	./test 10 ../src/CancerOR.xdsl
+Experiment: Experiment.cpp Learners.o Generator.o
+	$(CC) $(CFLAGS) Experiment.cpp Learners.o GaussJordan.o Generator.o -o Experiment -l$(SMILE) -l$(SMILEARN)
+
+GaussJordan.o: GaussJordan.cpp GaussJordan.h
+	$(CC) $(CFLAGS) -c GaussJordan.cpp
+
+Learners.o: GaussJordan.o Learners.h
+	$(CC) $(CFLAGS) -c Learners.cpp
+
+Generator.o: Generator.cpp Generator.h
+	$(CC) $(CFLAGS) -c Generator.cpp -l$(SMILE) -l$(SMILEARN)
+
+test: GaussJordan.o
+	#$(CC) $(CFLAGS) test.cpp -o test -l$(SMILE) -l$(SMILEARN)
+	$(CC) $(CFLAGS) testGJ.cpp GaussJordan.o -o testGJ -l$(SMILE) -l$(SMILEARN)
+	./testGJ < testGJ.in
 clean:
 	rm *.o

@@ -104,9 +104,9 @@ private:
     {
         Item(int h) : handle(h), discrete(-1), continous(0), type(-1) {}
         int handle;
-		int type;
         int discrete;
         double continous;
+		int type;
 		std::vector<double> virt;
         TemporalEvidence temporal; // slice, outcome index
     };

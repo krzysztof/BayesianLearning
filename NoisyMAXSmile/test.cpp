@@ -6,6 +6,7 @@
 #include <vector>
 #include <time.h>
 #include <map>
+#include "GaussJordan.h"
 
 using namespace std;
 
