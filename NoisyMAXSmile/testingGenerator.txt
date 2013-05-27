@@ -1,0 +1,11 @@
+P1 P2 C1
+True True True
+False True True
+True True True
+False True True
+False True True
+True True True
+False True True
+False True True
+True True True
+False True True

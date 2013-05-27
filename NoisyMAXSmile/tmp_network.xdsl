@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<smile version="1.0" id="Network1" numsamples="1000" discsamples="10000">
+	<nodes>
+		<cpt id="P1">
+			<state id="True" />
+			<state id="False" />
+			<probabilities>0.8848102724852269 0.1151897275147731</probabilities>
+		</cpt>
+		<cpt id="P2">
+			<state id="True" />
+			<state id="False" />
+			<probabilities>0.2622809038530367 0.7377190961469633</probabilities>
+		</cpt>
+		<cpt id="P3">
+			<state id="True" />
+			<state id="False" />
+			<probabilities>0.5321040662097305 0.4678959337902695</probabilities>
+		</cpt>
+		<cpt id="P4">
+			<state id="True" />
+			<state id="False" />
+			<probabilities>0.4666926030937205 0.5333073969062796</probabilities>
+		</cpt>
+		<noisymax id="C1">
+			<state id="True" />
+			<state id="False" />
+			<parents>P1 P2 P3 P4</parents>
+			<strengths>0 1 0 1 0 1 0 1</strengths>
+			<parameters>0.5660797920463287 0.4339202079536713 0 1 0.9101705677689435 0.08982943223105655 0 1 0.4221800438195076 0.5778199561804924 0 1 0.4220289760665197 0.5779710239334803 0 1 0.1423927904666489 0.8576072095333511</parameters>
+		</noisymax>
+	</nodes>
+	<extensions>
+		<genie version="1.0" app="SMILE Mar  6 2013" name="Network1" faultnameformat="nodestate">
+			<node id="P1">
+				<name>P1</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="MS Sans Serif" size="8" />
+				<position>66 226 149 284</position>
+			</node>
+			<node id="P2">
+				<name>P2</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="MS Sans Serif" size="8" />
+				<position>272 153 363 223</position>
+			</node>
+			<node id="P3">
+				<name>P3</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="MS Sans Serif" size="8" />
+				<position>454 170 523 213</position>
+			</node>
+			<node id="P4">
+				<name>P4</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="MS Sans Serif" size="8" />
+				<position>660 228 712 260</position>
+			</node>
+			<node id="C1">
+				<name>C1</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="MS Sans Serif" size="8" />
+				<position>303 378 371 420</position>
+			</node>
+		</genie>
+	</extensions>
+</smile>

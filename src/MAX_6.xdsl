@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<smile version="1.0" id="Network4" numsamples="1000" discsamples="10000">
+	<nodes>
+		<cpt id="P1">
+			<state id="True" />
+			<state id="False" />
+			<probabilities>0.33 0.67</probabilities>
+		</cpt>
+		<cpt id="P2">
+			<state id="True" />
+			<state id="False" />
+			<probabilities>0.22 0.78</probabilities>
+		</cpt>
+		<cpt id="P3">
+			<state id="True" />
+			<state id="True2" />
+			<state id="False" />
+			<probabilities>0.3 0.3 0.4</probabilities>
+		</cpt>
+		<cpt id="P4">
+			<state id="True" />
+			<state id="False" />
+			<probabilities>0.55 0.45</probabilities>
+		</cpt>
+		<cpt id="P5">
+			<state id="True" />
+			<state id="False" />
+			<probabilities>0.3 0.7</probabilities>
+		</cpt>
+		<cpt id="P6">
+			<state id="True" />
+			<state id="False" />
+			<probabilities>0.66 0.34</probabilities>
+		</cpt>
+		<noisymax id="C1">
+			<state id="True" />
+			<state id="True2" />
+			<state id="True3" />
+			<parents>P1 P2 P3 P4 P5 P6</parents>
+			<strengths>0 1 0 1 0 2 1 0 1 0 1 0 1</strengths>
+			<parameters>0.01000000000000001 0.3 0.69 0 0 1 0.005000000000000004 0.245 0.75 0 0 1 0.01000000000000001 0.3233333333333333 0.6666666666666667 0.3 0.2000000000000001 0.4999999999999999 0 0 1 0.003333333333333299 0.07999999999999996 0.9166666666666666 0 0 1 0.03787878787878796 0.7196969696969696 0.2424242424242424 0 0 1 0.04615384615384621 0.723076923076923 0.2307692307692308 0 0 1 0.0116666666666666 0.155 0.8333333333333334</parameters>
+		</noisymax>
+	</nodes>
+	<extensions>
+		<genie version="1.0" app="GeNIe 2.0.4535.0" name="Network4" faultnameformat="nodestate">
+			<node id="P1">
+				<name>P1</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>66 226 149 284</position>
+				<barchart active="true" />
+			</node>
+			<node id="P2">
+				<name>P2</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>201 181 292 251</position>
+				<barchart active="true" />
+			</node>
+			<node id="P3">
+				<name>P3</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>356 191 425 234</position>
+				<barchart active="true" />
+			</node>
+			<node id="P4">
+				<name>P4</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>501 206 553 238</position>
+				<barchart active="true" />
+			</node>
+			<node id="P5">
+				<name>P5</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>649 257 682 277</position>
+				<barchart active="true" />
+			</node>
+			<node id="P6">
+				<name>P6</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>745 353 778 373</position>
+				<barchart active="true" />
+			</node>
+			<node id="C1">
+				<name>C1</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>365 395 433 437</position>
+				<barchart active="true" />
+			</node>
+		</genie>
+	</extensions>
+</smile>

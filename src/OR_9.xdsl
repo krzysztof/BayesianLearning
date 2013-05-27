@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<smile version="1.0" id="Network4" numsamples="1000" discsamples="10000">
+	<nodes>
+		<cpt id="P1">
+			<state id="True" />
+			<state id="False" />
+			<probabilities>0.33 0.6699999999999999</probabilities>
+		</cpt>
+		<cpt id="P2">
+			<state id="True" />
+			<state id="False" />
+			<probabilities>0.22 0.78</probabilities>
+		</cpt>
+		<cpt id="P3">
+			<state id="True" />
+			<state id="False" />
+			<probabilities>0.01 0.99</probabilities>
+		</cpt>
+		<cpt id="P4">
+			<state id="True" />
+			<state id="False" />
+			<probabilities>0.55 0.45</probabilities>
+		</cpt>
+		<cpt id="P5">
+			<state id="True" />
+			<state id="False" />
+			<probabilities>0.26 0.74</probabilities>
+		</cpt>
+		<cpt id="P6">
+			<state id="True" />
+			<state id="False" />
+			<probabilities>0.63 0.37</probabilities>
+		</cpt>
+		<cpt id="P7">
+			<state id="True" />
+			<state id="False" />
+			<probabilities>0.8 0.2</probabilities>
+		</cpt>
+		<cpt id="P8">
+			<state id="True" />
+			<state id="False" />
+			<probabilities>0.71 0.29</probabilities>
+		</cpt>
+		<cpt id="P9">
+			<state id="True" />
+			<state id="False" />
+			<probabilities>0.33 0.6699999999999999</probabilities>
+		</cpt>
+		<noisymax id="C1">
+			<state id="True" />
+			<state id="False" />
+			<parents>P1 P2 P3 P4 P5 P6 P7 P8 P9</parents>
+			<strengths>0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1</strengths>
+			<parameters>0.61 0.39 0 1 0.25 0.75 0 1 0.15 0.85 0 1 0.04000000000000004 0.96 0 1 0.85 0.15 0 1 0.37 0.63 0 1 0.4099999999999999 0.5900000000000001 0 1 0.52 0.48 0 1 0.58 0.42 0 1 0.01000000000000001 0.99</parameters>
+		</noisymax>
+	</nodes>
+	<extensions>
+		<genie version="1.0" app="GeNIe 2.0.4535.0" name="Network4" faultnameformat="nodestate">
+			<node id="P1">
+				<name>P1</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>174 244 257 302</position>
+				<barchart active="true" width="128" height="64" />
+			</node>
+			<node id="P2">
+				<name>P2</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>216 161 307 231</position>
+				<barchart active="true" width="128" height="64" />
+			</node>
+			<node id="C1">
+				<name>C1</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>487 398 555 440</position>
+				<barchart active="true" width="128" height="64" />
+			</node>
+			<node id="P3">
+				<name>P3</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>313 102 382 145</position>
+				<barchart active="true" width="128" height="64" />
+			</node>
+			<node id="P4">
+				<name>P4</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>460 56 512 88</position>
+				<barchart active="true" width="128" height="64" />
+			</node>
+			<node id="P5">
+				<name>P5</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>611 56 657 84</position>
+				<barchart active="true" width="128" height="64" />
+			</node>
+			<node id="P6">
+				<name>P6</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>698 134 744 162</position>
+				<barchart active="true" width="128" height="64" />
+			</node>
+			<node id="P7">
+				<name>P7</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>762 211 808 239</position>
+				<barchart active="true" width="128" height="64" />
+			</node>
+			<node id="P8">
+				<name>P8</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>815 305 861 333</position>
+				<barchart active="true" width="128" height="64" />
+			</node>
+			<node id="P9">
+				<name>P9</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>803 400 836 420</position>
+				<barchart active="true" />
+			</node>
+		</genie>
+	</extensions>
+</smile>
